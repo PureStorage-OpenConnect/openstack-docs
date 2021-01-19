@@ -12,20 +12,20 @@ has been properly initialized by Cinder.
 
 ::
 
-    stack@devstack:~/$ cinder service-list
-    +------------------+-----------------+------+---------+-------+----------------------------+-----------------+
-    | Binary           | Host            | Zone | Status  | State | Updated_at                 | Disabled Reason |
-    +------------------+-----------------+------+---------+-------+----------------------------+-----------------+
-    | cinder-scheduler | devstack        | nova | enabled | up    | 2021-01-15T21:43:51.000000 | -               |
-    | cinder-volume    | devstack@pure   | nova | enabled | up    | 2021-01-15T21:43:54.000000 | -               |
-    | cinder-volume    | devstack@pure-2 | nova | enabled | up    | 2021-01-15T21:43:54.000000 | -               |
-    +------------------+-----------------+------+---------+-------+----------------------------+-----------------+
+    user@opstack:~/$ cinder service-list
+    +------------------+----------------+------+---------+-------+----------------------------+-----------------+
+    | Binary           | Host           | Zone | Status  | State | Updated_at                 | Disabled Reason |
+    +------------------+----------------+------+---------+-------+----------------------------+-----------------+
+    | cinder-scheduler | opstack        | nova | enabled | up    | 2021-01-15T21:43:51.000000 | -               |
+    | cinder-volume    | opstack@pure   | nova | enabled | up    | 2021-01-15T21:43:54.000000 | -               |
+    | cinder-volume    | opstack@pure-2 | nova | enabled | up    | 2021-01-15T21:43:54.000000 | -               |
+    +------------------+----------------+------+---------+-------+----------------------------+-----------------+
 
 
--  ``devstack@pure`` is the backend defined by the configuration
+-  ``opstack@pure`` is the backend defined by the configuration
    stanza ``[pure]``.
 
--  ``devstack@pure-2`` is the backend defined by the configuration
+-  ``opstack@pure-2`` is the backend defined by the configuration
    stanza ``[pure-2]``.
 
 .. _create-volume:
@@ -142,14 +142,12 @@ previously defined volume types.
 ::
 
     $ cinder list
-    +--------------------------------------+-----------+-----------------+------+--------------+----------+-------------+
-    |                  ID                  |   Status  |       Name      | Size |  Volume Type | Bootable | Attached to |
-    +--------------------------------------+-----------+-----------------+------+--------------+----------+-------------+
-    | 3678281e-3924-4512-952a-5b89713fac4d | available |      myGold     |  1   |     gold     |  false   |             |
-    | 459b388f-ae1d-49bf-9c1d-3fe3b18afad3 | available |     myBronze    |  1   |    bronze    |  false   |             |
-    | 6dd3e64d-ca02-4156-8532-24294db89329 | available |     mySilver    |  1   |    silver    |  false   |             |
-    | 93ef9627-ac75-46ae-820b-f722765d7828 | available |   myReplicated  |  1   |  replicated  |  false   |             |
-    +--------------------------------------+-----------+-----------------+------+--------------+----------+-------------+
+    +--------------------------------------+-----------+--------------+------+-------------+----------+-------------+
+    |                  ID                  |   Status  | Name         | Size | Volume Type | Bootable | Attached to |
+    +--------------------------------------+-----------+--------------+------+-------------+----------+-------------+
+    | 3678281e-3924-4512-952a-5b89713fac4d | available | myGold       |  1   | gold        |  false   |             |
+    | 93ef9627-ac75-46ae-820b-f722765d7828 | available | myReplicated |  1   | replicated  |  false   |             |
+    +--------------------------------------+-----------+--------------+------+-------------+----------+-------------+
 
 .. _cinder-manage:
 
@@ -162,64 +160,54 @@ name or UUID.
 ::
 
     $ cinder get-pools
-    +----------+------------------------------------+
-    | Property |               Value                |
-    +----------+------------------------------------+
-    |   name   | devstack@puredriver-1#puredriver-1 |
-    +----------+------------------------------------+
+    +----------+-----------------------------------+
+    | Property |              Value                |
+    +----------+-----------------------------------+
+    |   name   | opstack@puredriver-1#puredriver-1 |
+    +----------+-----------------------------------+
 
 ::
 
-    $ cinder manage --id-type source-name openstack9@iscsi#pool /vol/vol1/lun1
-    +--------------------------------+--------------------------------------+
-    |            Property            |                Value                 |
-    +--------------------------------+--------------------------------------+
-    |          attachments           |                  []                  |
-    |       availability_zone        |                 nova                 |
-    |            bootable            |                false                 |
-    |           created_at           |      2014-08-25T15:11:18.000000      |
-    |          description           |                 None                 |
-    |           encrypted            |                False                 |
-    |               id               | 9a62ce5f-b125-48e8-8c94-79356b27f2a9 |
-    |            metadata            |                  {}                  |
-    |              name              |                 None                 |
-    |     os-vol-host-attr:host      |        openstack9@iscsi#pool         |
-    | os-vol-mig-status-attr:migstat |                 None                 |
-    | os-vol-mig-status-attr:name_id |                 None                 |
-    |  os-vol-tenant-attr:tenant_id  |   8b4ef3cd82f145738ad8195e6bd3942c   |
-    |              size              |                  0                   |
-    |          snapshot_id           |                 None                 |
-    |          source_volid          |                 None                 |
-    |             status             |               creating               |
-    |            user_id             |   1b1c9e72e33f4a35b73a8e2d43354d1c   |
-    |          volume_type           |                 None                 |
-    +--------------------------------+--------------------------------------+
+    $ cinder --os-volume-api-version 3.8 manageable-list opstack@puredriver-1#puredriver-1
+    +----------------------------------------------------------------+------+----------------+---------------------------------------------------------------------------+--------------------------------------+------------+
+    | reference                                                      | size | safe_to_manage | reason_not_safe                                                           | cinder_id                            | extra_info |
+    +----------------------------------------------------------------+------+----------------+---------------------------------------------------------------------------+--------------------------------------+------------+
+    | {'name': 'volume-e898e997-1254-4c56-9136-239b1568fe0b-cinder'} | 1    | False          | Volume connected to host devstack-bbabda406f7846c6b0d9e1ec53761419-cinder | -                                    | -          |
+    | {'name': 'volume-648bcd17-e36e-41b3-8087-391544e3b9ac-cinder'} | 1    | False          | Volume already managed                                                    | 648bcd17-e36e-41b3-8087-391544e3b9ac | -          |
+    | {'name': 'volume-17eb768e-8758-44ff-afc1-45720c1b19f1-cinder'} | 1    | False          | Volume already managed                                                    | 17eb768e-8758-44ff-afc1-45720c1b19f1 | -          |
+    | {'name': 'manage-me'}                                          | 2    | True           |                                                                           | -                                    | -          |
++----------------------------------------------------------------+------+----------------+---------------------------------------------------------------------------+--------------------------------------+------------+
 
 ::
 
-    $ cinder manage --id-type source-id openstack9@iscsi#pool 013a7fe0-039b-459e-8cc2-7b59c693139d
+    $ cinder manage --id-type source-name opstack@puredriver-1#puredriver-1 manage-me
     +--------------------------------+--------------------------------------+
-    |            Property            |                Value                 |
+    | Property                       | Value                                |
     +--------------------------------+--------------------------------------+
-    |          attachments           |                  []                  |
-    |       availability_zone        |                 nova                 |
-    |            bootable            |                false                 |
-    |           created_at           |      2014-08-25T15:13:18.000000      |
-    |          description           |                 None                 |
-    |           encrypted            |                False                 |
-    |               id               | f2c94f4d-adb3-4c3c-a6aa-cb4c52bd2e39 |
-    |            metadata            |                  {}                  |
-    |              name              |                 None                 |
-    |     os-vol-host-attr:host      |        openstack9@iscsi#pool         |
-    | os-vol-mig-status-attr:migstat |                 None                 |
-    | os-vol-mig-status-attr:name_id |                 None                 |
-    |  os-vol-tenant-attr:tenant_id  |   8b4ef3cd82f145738ad8195e6bd3942c   |
-    |              size              |                  0                   |
-    |          snapshot_id           |                 None                 |
-    |          source_volid          |                 None                 |
-    |             status             |               creating               |
-    |            user_id             |   1b1c9e72e33f4a35b73a8e2d43354d1c   |
-    |          volume_type           |                 None                 |
+    | attachments                    | []                                   |
+    | availability_zone              | nova                                 |
+    | bootable                       | false                                |
+    | consistencygroup_id            | None                                 |
+    | created_at                     | 2021-01-19T22:09:52.000000           |
+    | description                    | None                                 |
+    | encrypted                      | False                                |
+    | id                             | be126563-201a-4025-bf82-5338e4ececb2 |
+    | metadata                       | {}                                   |
+    | migration_status               | None                                 |
+    | multiattach                    | False                                |
+    | name                           | None                                 |
+    | os-vol-host-attr:host          | opstack@puredriver-1#puredriver-1    |
+    | os-vol-mig-status-attr:migstat | None                                 |
+    | os-vol-mig-status-attr:name_id | None                                 |
+    | os-vol-tenant-attr:tenant_id   | 45a06744d6fa44418eb2c261dae0ccf9     |
+    | replication_status             | None                                 |
+    | size                           | 0                                    |
+    | snapshot_id                    | None                                 |
+    | source_volid                   | None                                 |
+    | status                         | creating                             |
+    | updated_at                     | 2021-01-19T22:09:52.000000           |
+    | user_id                        | c008a02d553a4f9595d8437da67996b4     |
+    | volume_type                    | gold                                 |
     +--------------------------------+--------------------------------------+
 
 ::
@@ -228,9 +216,7 @@ name or UUID.
     +--------------------------------------+----------------+------+------+-------------+----------+-------------+
     |                  ID                  |     Status     | Name | Size | Volume Type | Bootable | Attached to |
     +--------------------------------------+----------------+------+------+-------------+----------+-------------+
-    | 9a62ce5f-b125-48e8-8c94-79356b27f2a9 |   available    | None |  1   |     None    |  false   |             |
-    +--------------------------------------+----------------+------+------+-------------+----------+-------------+
-    | f2c94f4d-adb3-4c3c-a6aa-cb4c52bd2e39 |   available    | None |  1   |     None    |  false   |             |
+    | be126563-201a-4025-bf82-5338e4ececb2 |   available    | None |  2   | gold        |  false   |             |
     +--------------------------------------+----------------+------+------+-------------+----------+-------------+
 
 .. _cinder-unmanage:
@@ -247,7 +233,6 @@ In this section we unmanage a Cinder volume by specifying its ID.
     |                  ID                  |     Status     | Name | Size | Volume Type | Bootable | Attached to |
     +--------------------------------------+----------------+------+------+-------------+----------+-------------+
     | 206a6731-f23b-419d-8131-8bccbbd83647 |   available    | None |  1   |     None    |  false   |             |
-    +--------------------------------------+----------------+------+------+-------------+----------+-------------+
     | ad0262e0-bbe6-4b4d-8c36-ea6a361d777a |   available    | None |  1   |     None    |  false   |             |
     +--------------------------------------+----------------+------+------+-------------+----------+-------------+
 
@@ -281,14 +266,14 @@ spec, and lastly associate the QoS spec with the volume type.
 
 ::
 
-    $ cinder qos-create qos_demo consumer="front-end' read_iops_sec=100
+    $ cinder qos-create qos_demo maxIOPS=100
     +----------+--------------------------------------+
     | Property |                Value                 |
     +----------+--------------------------------------+
-    | consumer |               front-end               |
+    | consumer |               back-end               |
     |    id    | db081cde-1a9a-41bd-a8a3-a0259db7409b |
     |   name   |               qos_demo               |
-    |  specs   |      {u'read_iops_sec': u'100'}      |
+    |  specs   |         {u'maxIOPS': u'100'}         |
     +----------+--------------------------------------+
 
 ::
@@ -298,11 +283,11 @@ spec, and lastly associate the QoS spec with the volume type.
 ::
 
     $ cinder qos-list
-    +--------------------------------------+----------+-----------+----------------------------+
-    |                  ID                  |   Name   | Consumer  |        specs               |
-    +--------------------------------------+----------+-----------+----------------------------+
-    | db081cde-1a9a-41bd-a8a3-a0259db7409b | qos_demo | front-end | {u'read_iops_sec': u'100'} |
-    +--------------------------------------+----------+-----------+----------------------------+
+    +--------------------------------------+----------+----------+----------------------+
+    |                  ID                  |   Name   | Consumer |        specs         |
+    +--------------------------------------+----------+----------+----------------------+
+    | db081cde-1a9a-41bd-a8a3-a0259db7409b | qos_demo | back-end | {u'maxIOPS': u'100'} |
+    +--------------------------------------+----------+----------+----------------------+
 
 ::
 
@@ -360,11 +345,11 @@ consistency group.
 ::
 
     $ cinder type-create consistency-group-support
-    +--------------------------------------+---------------------------+-----------+
-    |                  ID                  |            Name           | Is_Public |
-    +--------------------------------------+---------------------------+-----------+
-    | 313da739-b629-47f6-ba5d-0d5e4ead0635 | consistency-group-support |    True   |
-    +--------------------------------------+---------------------------+-----------+
+    +--------------------------------------+---------------------------+-------------+-----------+
+    | ID                                   | Name                      | Description | Is_Public |
+    +--------------------------------------+---------------------------+-------------+-----------+
+    | e9a652da-8cc9-4130-866b-4c7bd25b2cb2 | consistency-group-support | -           | True      |
+    +--------------------------------------+---------------------------+-------------+-----------+
 
 ::
 
@@ -373,28 +358,28 @@ consistency group.
 ::
 
     $ cinder consisgroup-create consistency-group-support --name cg1
-    +-------------------+-------------------------------------------+
-    |      Property     |                   Value                   |
-    +-------------------+-------------------------------------------+
-    | availability_zone |                    nova                   |
-    |     created_at    |         2016-02-29T15:57:11.000000        |
-    |    description    |                    None                   |
-    |         id        |    2cc3d172-af05-421b-babd-01d4cd91078d   |
-    |        name       |                    cg1                    |
-    |       status      |                 available                 |
-    |    volume_types   | [u'313da739-b629-47f6-ba5d-0d5e4ead0635'] |
-    +-------------------+-------------------------------------------+
+    +-------------------+------------------------------------------+
+    | Property          | Value                                    |
+    +-------------------+------------------------------------------+
+    | availability_zone | nova                                     |
+    | created_at        | 2021-01-19T22:20:27.000000               |
+    | description       | None                                     |
+    | id                | 1e875dfe-e213-43c6-a365-12610b92341b     |
+    | name              | cg1                                      |
+    | status            | creating                                 |
+    | volume_types      | ['e9a652da-8cc9-4130-866b-4c7bd25b2cb2'] |
+    +-------------------+------------------------------------------+
 
 ::
 
-    $ cinder create --name vol-in-cg1 --consisgroup-id 2cc3d172-af05-421b-babd-01d4cd91078d --volume-type consistency-group-support 1
+    $ cinder create --name vol-in-cg1 --consisgroup-id 1e875dfe-e213-43c6-a365-12610b92341b --volume-type consistency-group-support 1
     +---------------------------------------+-------------------------------------------+
     |                Property               |                   Value                   |
     +---------------------------------------+-------------------------------------------+
     |              attachments              |                     []                    |
     |           availability_zone           |                    nova                   |
     |                bootable               |                   false                   |
-    |          consistencygroup_id          |    2cc3d172-af05-421b-babd-01d4cd91078d   |
+    |          consistencygroup_id          |   1e875dfe-e213-43c6-a365-12610b92341b    |
     |               created_at              |         2016-02-29T15:59:36.000000        |
     |              description              |                    None                   |
     |               encrypted               |                   False                   |
@@ -403,7 +388,7 @@ consistency group.
     |            migration_status           |                    None                   |
     |              multiattach              |                   False                   |
     |                  name                 |                 vol-in-cg1                |
-    |         os-vol-host-attr:host         | openstack1@cmodeiSCSI#vol_21082015_132031 |
+    |         os-vol-host-attr:host         |                    None                   |
     |     os-vol-mig-status-attr:migstat    |                    None                   |
     |     os-vol-mig-status-attr:name_id    |                    None                   |
     |      os-vol-tenant-attr:tenant_id     |      b2b6110ec5c3411089e60e928aafbba6     |
@@ -425,7 +410,7 @@ consistency group.
     +---------------------+--------------------------------------+
     |       Property      |                Value                 |
     +---------------------+--------------------------------------+
-    | consistencygroup_id | 2cc3d172-af05-421b-babd-01d4cd91078d |
+    | consistencygroup_id | 1e875dfe-e213-43c6-a365-12610b92341b |
     |      created_at     |      2016-02-29T16:01:30.000000      |
     |     description     |                 None                 |
     |          id         | cd3770e1-fa59-48a6-ba48-2f3581f2b03b |
@@ -626,7 +611,7 @@ revert to that last snapshot.
 
 ::
 
-    $ cinder create --name cinder-vol-1 --volume-type cmodeNFS 1
+    $ cinder create --name cinder-vol-1 --volume-type gold 1
     +--------------------------------+--------------------------------------+
     | Property                       | Value                                |
     +--------------------------------+--------------------------------------+
@@ -653,7 +638,7 @@ revert to that last snapshot.
     | status                         | creating                             |
     | updated_at                     | None                                 |
     | user_id                        | 90d2c8d154594c2eb51929a89474c753     |
-    | volume_type                    | cmodeNFS                             |
+    | volume_type                    | gold                                 |
     +--------------------------------+--------------------------------------+
 
 ::
