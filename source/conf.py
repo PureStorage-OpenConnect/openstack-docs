@@ -65,7 +65,7 @@ releases = [
     'austin', 'bexar', 'cactus', 'diablo', 'essex', 'folsom', 'grizzly',
     'havana', 'icehouse', 'juno', 'kilo', 'liberty', 'mitaka', 'newton',
     'ocata', 'pike', 'queens', 'rocky', 'stein', 'train', 'ussuri', 'victoria',
-    'wallaby', 'xena', 'yoga', 'zed', '2023.1',
+    'wallaby', 'xena', 'yoga', 'zed', '2023.1', '2023.2'
 ]
 unnamed = list(string.ascii_lowercase[len(releases) % 26:])
 releases += unnamed
@@ -96,7 +96,7 @@ if watermark == '':
     ).read().strip(' \n\t').lower().split('\n'))
     if len(stable_branches) == 0 or '' in stable_branches:
         # Can be removed as soon as we have stable branches
-        watermark = "2023.1 DRAFT"
+        watermark = "2023.2 DRAFT"
     else:
         last_stable_release = stable_branches[-1].split('stable/')[-1]
         try:
