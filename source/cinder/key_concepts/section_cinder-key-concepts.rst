@@ -144,9 +144,9 @@ following capabilities in the OpenStack Block Storage API
 +-----------------+-------------------------------------------------------------------------------------+
 | Option          | Description                                                                         |
 +=================+=====================================================================================+
-| maxIOPS         | The maximum bandwidth for this volume in MB/s. Limits: 1 - 524288 (512Gb/s).        |
+| maxBWS          | The maximum bandwidth for this volume in MB/s. Limits: 1 - 524288 (512Gb/s).        |
 +-----------------+-------------------------------------------------------------------------------------+
-| maxBWS          | The maximum number of IOPS allowed for this volume. Limits: 100 - 100 million       |
+| maxIOPS         | The maximum number of IOPS allowed for this volume. Limits: 100 - 100 million       |
 +-----------------+-------------------------------------------------------------------------------------+
 
 Table 7.1. FlashArray QoS Options
