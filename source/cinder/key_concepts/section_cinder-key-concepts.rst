@@ -144,7 +144,7 @@ following capabilities in the OpenStack Block Storage API
 +-----------------+-------------------------------------------------------------------------------------+
 | Option          | Description                                                                         |
 +=================+=====================================================================================+
-| maxBWS          | The maximum bandwidth for this volume in MB/s. Limits: 1 - 524288 (512Gbs).        |
+| maxBWS          | The maximum bandwidth for this volume in MB/s. Limits: 1 - 524288 (512Gbs).         |
 +-----------------+-------------------------------------------------------------------------------------+
 | maxIOPS         | The maximum number of IOPS allowed for this volume. Limits: 100 - 100 million       |
 +-----------------+-------------------------------------------------------------------------------------+
