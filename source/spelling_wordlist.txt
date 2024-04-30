@@ -29,6 +29,7 @@ Fouts
 FQDN
 Gb
 GbE
+Gbs
 GenericShareDriver
 Geneve
 GiB
