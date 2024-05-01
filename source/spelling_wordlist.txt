@@ -28,6 +28,7 @@ FlashBladeShareDriver
 Fouts
 FQDN
 Gb
+Gbs
 GbE
 GenericShareDriver
 Geneve
