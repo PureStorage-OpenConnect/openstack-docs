@@ -79,7 +79,7 @@ watermark = None
 
 # On a local env, look at the base branch perhaps?
 local_base_branch = os.popen(
-    "git show-branch -a | grep '\*' | "
+    "git show-branch -a | grep '\\*' | "
     "grep -v $(git rev-parse --abbrev-ref HEAD) | head -n1").read()
 
 local_base_branch_search = re.search(
