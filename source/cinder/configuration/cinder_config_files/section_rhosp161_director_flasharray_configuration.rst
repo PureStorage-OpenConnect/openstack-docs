@@ -65,6 +65,8 @@ modifying the `cinder-pure-config.yaml` file as follows:
       CinderPureBackendName:
         - tripleo_pure_1
         - tripleo_pure_2
+      CinderPureSanIp: '' # Placeholder
+      CinderPureAPIToken: '' # Placeholder
       CinderPureStorageProtocol: 'iSCSI' # Default value for all Pure backends
       CinderPureUseChap: false # Default value for the Pure backends
       CinderPureMultiConfig:
