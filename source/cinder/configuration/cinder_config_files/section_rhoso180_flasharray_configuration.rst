@@ -7,7 +7,7 @@ Overview
 --------
 
 This guide shows how to configure and deploy the Pure Storage FlashArray Cinder driver in a
-**Red Hat OpenStack Services on OpenShift (RHOSO) 17.0** deployment.
+**Red Hat OpenStack Services on OpenShift (RHOSO) 18.0** deployment.
 After reading this, you'll be able to define the proper configuration and
 deploy single or multiple FlashArray Cinder back ends in a RHOSO cluster.
 
@@ -20,6 +20,13 @@ deploy single or multiple FlashArray Cinder back ends in a RHOSO cluster.
 
   RHOSO18.0 is based on OpenStack 2023.1 (Antelope) release with 2023.2 (Bobcat) backports. Features
   included after Antelope release may not be available in RHOSO18.0.
+
+In Red Hat OpenStack Services on OpenShift 18.0, the FlashArray cinder volume drivers support
+the following dataplanes:
+
+- iSCSI
+- FibreChannel
+- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat])
 
 Requirements
 ------------
@@ -39,7 +46,7 @@ Deployment Steps
 Prepare the OpenStack Control Plane
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The follwoing steps need to be applied after the OpenStackControlPlane has been
+The following steps need to be applied after the OpenStackControlPlane has been
 successfully deployed in your environment.
 
 Use Certified Pure Storage Cinder Volume Image
@@ -54,9 +61,8 @@ and should be stored in a local registry.
 Create a MachineConfig file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Depending on the dataplance being used for the OpenStack Cinder service, you will
-need to create a machineconfig YAML file to enable multipathing and the selected
-dataplane.
+You will need to create a machineconfig YAML file to enable multipathing and the selected
+dataplane being utilised by the FlashArray(s).
 
 Using iSCSI dataplane
 ~~~~~~~~~~~~~~~~~~~~~
@@ -115,9 +121,10 @@ Using FC dataplane
 ~~~~~~~~~~~~~~~~~~
 
 In this example file (``pure-c-vol.yaml``), only multipath needs to be configured
-as the FC dataplane requires no additoinal configuration for either the
-Cinder Volume service pod and the Nova Compute pods, assuming the servers
-running these pods have fibre channel cards installed, connected and zoned:
+as the FC dataplane requires no additional configuration for either the
+Cinder Volume service pod and the Nova Compute pods; assuming the servers
+running these pods have fibre channel cards installed, connected and zoned and
+that the OpenShift nodes have been correctly flagged as having fibre channel cards:
 
 .. code-block:: yaml
   :name: cinder-machine-config-fc
@@ -213,13 +220,14 @@ and the Nova Compute pods:
           name: multipathd.service
 
 
-Additional details for different supported dataplanes and requirements can be found `here<https://access.redhat.com/articles/7032701>`__
+Additional details for different supported dataplanes and requirements can be found
+`here<https://access.redhat.com/articles/7032701>`__
 
 Create a Secret file
 ^^^^^^^^^^^^^^^^^^^^
 
-It is also necessary to create a secret file that will contain the access
-credential for your backend Pure FlashArray(s) in your RHOSO deployment.
+It is necessary to create a secret file that will contain the access
+credential(s) for your backend Pure FlashArray(s) in your RHOSO deployment.
 
 In this following example file (``pure-secrets.yaml``) secrets are provided for
 two backend FlashArrays. You need to define a unique secret for each of your backends.
@@ -240,7 +248,6 @@ two backend FlashArrays. You need to define a unique secret for each of your bac
       [pure-iscsi]
       san_ip=<INSERT YOUR FA1 IP HERE>
       pure_api_token=<INSERT YOUR FA1 API TOKEN HERE>
-      replication_device=<INSERT IF REQUIRED>
   ---
   apiVersion: v1
   kind: Secret
@@ -255,7 +262,6 @@ two backend FlashArrays. You need to define a unique secret for each of your bac
       [pure-iscsi-2]
       san_ip=<INSERT YOUR FA2 IP HERE>
       pure_api_token=<INSERT YOUR FA2 API TOKEN HERE>
-
 
 Create an OpenStackVersion config file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -278,7 +284,7 @@ deployment. This is defined in the following YAML file (``pure-c-vol-image.yaml`
         pure-iscsi-2: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0
 
 In this example the image is being pulled directly from the Red Hat image registry, but you
-may use a copy in your local image registry cretaed by the OpenShift deployment.
+may use a copy in your local image registry created by the OpenShift deployment.
 
 Update the OpenStack Control Plane
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -320,6 +326,9 @@ control plane with the FlashArray cinder backend(s):
 The above example is again for two backends. Also notice that the Cinder configuration
 part of the deployment (notice that *pure-iscsi* / *pure-iscsi-2* here must match the ones
 used in the *OpenStackVersion* above):
+
+Note that if you are using the NVMe volume driver an addtional parameter of
+``pure_nvme_transport=tcp`` will needed to be added into the backend stanza(s).
 
 Apply the custom configurations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
