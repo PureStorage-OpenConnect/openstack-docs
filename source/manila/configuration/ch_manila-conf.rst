@@ -6,4 +6,4 @@ Manila Configuration Files
 
    manila_config_files/section_flashblade-conf.rst
    manila_config_files/section_rhosp171_director_flashblade_configuration.rst
-   manila_config_files/section_rhos018_flashblade_configuration.rst
+   manila_config_files/section_rhoso18_flashblade_configuration.rst
