@@ -58,171 +58,6 @@ Image when deploying RHOSO18.0 with a Pure Storage FlashArray backend.
 This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/search?searchType=containers&partnerName=Pure%20Storage%2C%20Inc.&p=1>`__
 and should be stored in a local registry.
 
-Create a MachineConfig file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-You will need to create a machineconfig YAML file to enable multipathing and the selected
-dataplane being utilised by the FlashArray(s).
-
-Using iSCSI dataplane
-~~~~~~~~~~~~~~~~~~~~~
-
-In this example file (``pure-c-vol.yaml``), both multipath and the iSCSI dataplane are
-configured and this will be applied to both the Cinder Volume service pod
-and the Nova Compute pods:
-
-.. code-block:: yaml
-  :name: cinder-machine-config-iscsi
-
-  apiVersion: machineconfiguration.openshift.io/v1
-  kind: MachineConfig
-  metadata:
-    labels:
-      machineconfiguration.openshift.io/role: worker
-      service: cinder
-    name: 99-master-cinder-enable-iscsid
-  spec:
-    config:
-      ignition:
-        version: 3.4.0
-      systemd:
-        units:
-        - enabled: true
-          name: iscsid.service
-  ---
-  apiVersion: machineconfiguration.openshift.io/v1
-  kind: MachineConfig
-  metadata:
-    labels:
-      machineconfiguration.openshift.io/role: worker
-      service: cinder
-    name: 99-master-cinder-enable-multipathd
-  spec:
-    config:
-      ignition:
-        version: 3.4.0
-      storage:
-        files:
-          - path: /etc/multipath.conf
-            overwrite: false
-            mode: 384
-            user:
-              name: root
-            group:
-              name: root
-            contents:
-              source: data:,defaults%20%7B%0A%20%20user_friendly_names%20no%0A%20%20recheck_wwid%20yes%0A%20%20skip_kpartx%20yes%0A%20%20find_multipaths%20yes%0A%7D%0A%0Ablacklist%20%7B%0A%7D
-      systemd:
-        units:
-        - enabled: true
-          name: multipathd.service
-
-Using FC dataplane
-~~~~~~~~~~~~~~~~~~
-
-In this example file (``pure-c-vol.yaml``), only multipath needs to be configured
-as the FC dataplane requires no additional configuration for either the
-Cinder Volume service pod and the Nova Compute pods; assuming the servers
-running these pods have fibre channel cards installed, connected and zoned and
-that the OpenShift nodes have been correctly flagged as having fibre channel cards:
-
-.. code-block:: yaml
-  :name: cinder-machine-config-fc
-
-  apiVersion: machineconfiguration.openshift.io/v1
-  kind: MachineConfig
-  metadata:
-    labels:
-      machineconfiguration.openshift.io/role: worker
-      service: cinder
-    name: 99-master-cinder-enable-multipathd
-  spec:
-    config:
-      ignition:
-        version: 3.4.0
-      storage:
-        files:
-          - path: /etc/multipath.conf
-            overwrite: false
-            mode: 384
-            user:
-              name: root
-            group:
-              name: root
-            contents:
-              source: data:,defaults%20%7B%0A%20%20user_friendly_names%20no%0A%20%20recheck_wwid%20yes%0A%20%20skip_kpartx%20yes%0A%20%20find_multipaths%20yes%0A%7D%0A%0Ablacklist%20%7B%0A%7D
-      systemd:
-        units:
-        - enabled: true
-          name: multipathd.service
-
-Using NVMe-TCP dataplane
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-In this example file (``pure-c-vol.yaml``), both multipath and the NVMe-TCP dataplane are
-configured and this will be applied to both the Cinder Volume service pod
-and the Nova Compute pods:
-
-.. code-block:: yaml
-  :name: cinder-machine-config-nvme-tcp
-
-  apiVersion: machineconfiguration.openshift.io/v1
-  kind: MachineConfig
-  metadata:
-    labels:
-      machineconfiguration.openshift.io/role: worker
-      service: cinder
-    name: 99-master-cinder-load-nvme-fabrics
-  spec:
-    config:
-      ignition:
-        version: 3.4.0
-      storage:
-        files:
-          - path: /etc/modules-load.d/nvme_fabrics.conf
-            overwrite: false
-            # Mode must be decimal, this is 0644
-            mode: 420
-            user:
-              name: root
-            group:
-              name: root
-            contents:
-              # Source can be a http, https, tftp, s3, gs, or data as defined in rfc2397.
-              # This is the rfc2397 text/plain string format
-              source: data:,nvme-fabrics%0Anvme-tcp
-  ---
-  apiVersion: machineconfiguration.openshift.io/v1
-  kind: MachineConfig
-  metadata:
-    labels:
-      machineconfiguration.openshift.io/role: worker
-      service: cinder
-    name: 99-master-cinder-enable-multipathd
-  spec:
-    config:
-      ignition:
-        version: 3.4.0
-      storage:
-        files:
-          - path: /etc/multipath.conf
-            overwrite: false
-            mode: 384
-            user:
-              name: root
-            group:
-              name: root
-            contents:
-              source: data:,defaults%20%7B%0A%20%20user_friendly_names%20no%0A%20%20recheck_wwid%20yes%0A%20%20skip_kpartx%20yes%0A%20%20find_multipaths%20yes%0A%7D%0A%0Ablacklist%20%7B%0A%7D
-      systemd:
-        units:
-        - enabled: true
-          name: multipathd.service
-
-
-Additional details for different supported dataplanes and requirements can be found
-`here<https://access.redhat.com/articles/7032701>`__
-
 Create a Secret file
 ^^^^^^^^^^^^^^^^^^^^
 
@@ -312,6 +147,8 @@ control plane with the FlashArray cinder backend(s):
               - cinder-volume-pure-secrets1
             networkAttachments:
             - storage
+            replicas: 1
+            resources: {}
           pure-iscsi-2:
             customServiceConfig: |
               [pure-iscsi-2]
@@ -321,6 +158,8 @@ control plane with the FlashArray cinder backend(s):
               - cinder-volume-pure-secrets2
             networkAttachments:
             - storage
+            replicas: 1
+            resources: {}
 
 
 The above example is again for two backends. Also notice that the Cinder configuration
@@ -347,15 +186,15 @@ the above configuration files:
 Test the Deployed Back Ends
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-After RHOSO system is deployed, run the following command to check if the
-Cinder services are up:
+After RHOSO system is deployed, access the provided pod openstackclient from where you can 
+run the OpenStack commands to check if the Cinder services are up:
 
 .. code-block:: bash
   :name: cinder-service-list
 
-  $ export OS_CLOUD=<your cloud name>
-  $ export OS_PASSWORD=<your password>
-  $ openstack volume service list
+  $ oc rsh openstackclient
+  sh-5.1$ export OS_PASSWORD=<your password>
+  sh-5.1$ openstack volume service list
 
 
 Run the following commands to create the volume types mapped to the deployed back ends:
@@ -363,10 +202,10 @@ Run the following commands to create the volume types mapped to the deployed bac
 .. code-block:: bash
   :name: create-volume-types
 
-  $ openstack volume type create pure-iscsi
-  $ openstack volume type set --property volume_backend_name=pure-iscsi pure-iscsi
-  $ openstack volume type create pure-iscsi-2
-  $ openstack volume type set --property volume_backend_name=pure-iscsi-2 pure-iscsi-2
+  sh-5.1$ openstack volume type create pure-iscsi
+  sh-5.1$ openstack volume type set --property volume_backend_name=pure-iscsi pure-iscsi
+  sh-5.1$ openstack volume type create pure-iscsi-2
+  sh-5.1$ openstack volume type set --property volume_backend_name=pure-iscsi-2 pure-iscsi-2
 
 Make sure that you're able to create Cinder volumes with the configured volume
 types:
@@ -374,5 +213,5 @@ types:
 .. code-block:: bash
   :name: create-volumes
 
-  $ openstack volume create --type pure-iscsi --size 1 v1
-  $ openstack volume create --type pure-iscsi-2 --size 1 v2
+  sh-5.1$ openstack volume create --type pure-iscsi --size 1 v1
+  sh-5.1$ openstack volume create --type pure-iscsi-2 --size 1 v2
