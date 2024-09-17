@@ -14,19 +14,20 @@ deploy single or multiple FlashArray Cinder back ends in a RHOSO cluster.
 .. note::
 
   For more information about RHOSO, please refer to its `documentation pages
-  <https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0-beta/html/deploying_red_hat_openstack_services_on_openshift/index>`_.
+  <https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/html/deploying_red_hat_openstack_services_on_openshift/index>`_.
 
 .. warning::
 
-  RHOSO18.0 is based on OpenStack 2023.1 (Antelope) release with 2023.2 (Bobcat) backports. Features
-  included after Antelope release may not be available in RHOSO18.0.
+  RHOSO18.0 is based on OpenStack 2023.1 (Antelope) release with a backport of the 
+  2023.2 (Bobcat) NVMe-TCP Cinder driver for Pure Storage. Other Pure Storage driver features
+  included after the Antelope release may not be available in RHOSO18.0.
 
 In Red Hat OpenStack Services on OpenShift 18.0, the FlashArray cinder volume drivers support
 the following dataplanes:
 
 - iSCSI
-- FibreChannel
-- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat])
+- FibreChannel [certification pending]
+- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat]) [certification pending]
 
 Requirements
 ------------
@@ -55,8 +56,29 @@ Use Certified Pure Storage Cinder Volume Image
 Red Hat requires that you utilize the Certified Pure Storage Cinder Volume
 Image when deploying RHOSO18.0 with a Pure Storage FlashArray backend.
 
-This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/search?searchType=containers&partnerName=Pure%20Storage%2C%20Inc.&p=1>`__
-and should be stored in a local registry.
+This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/search?searchType=containers&partnerName=Pure%20Storage%2C%20Inc.&p=1>`__.
+
+Ensure the certified image is added to the ``openstackversion`` CR.  This is defined in the following YAML file (``openstack_version.yaml``):
+
+.. code-block:: yaml
+  :name: cinder-openstackversion
+
+  apiVersion: core.openstack.org/v1beta1
+  kind: OpenStackVersion
+  metadata:
+    name: openstack
+  spec:
+    customContainerImages:
+      cinderVolumeImages:
+        pure-iscsi: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
+        pure-iscsi-2: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
+
+Save this file and update:
+
+.. code-block:: bash
+   :name: openstackversion-apply
+
+   $ oc apply -f openstack-version.yaml
 
 Create a Secret file
 ^^^^^^^^^^^^^^^^^^^^
@@ -98,34 +120,20 @@ two backend FlashArrays. You need to define a unique secret for each of your bac
       san_ip=<INSERT YOUR FA2 IP HERE>
       pure_api_token=<INSERT YOUR FA2 API TOKEN HERE>
 
-Create an OpenStackVersion config file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Save this file and apply:
 
-As previously mentioned, it is required, when using FlashArrays as Cinder
-backends, that a certified Cinder Volume image is used within the RHOSO
-deployment. This is defined in the following YAML file (``pure-c-vol-image.yaml``):
+.. code-block:: bash
+   :name: secret-apply
 
-.. code-block:: yaml
-  :name: cinder-pure-openstackversion
-
-  apiVersion: core.openstack.org/v1beta1
-  kind: OpenStackVersion
-  metadata:
-    name: openstack
-  spec:
-    customContainerImages:
-      cinderVolumeImages:
-        pure-iscsi: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0
-        pure-iscsi-2: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0
-
-In this example the image is being pulled directly from the Red Hat image registry, but you
-may use a copy in your local image registry created by the OpenShift deployment.
+   $ oc apply -f ./pure-secrets.yaml
 
 Update the OpenStack Control Plane
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Create the following file (``pure-c-vol-config.yaml``) to update the OpenStack
-control plane with the FlashArray cinder backend(s):
+Open your OpenStackControlPlane CR file, ``openstack_control_plane.yaml``. Edit the CR file and add in the
+Pure Storage Cinder volume backend.
+
+For example:
 
 .. code-block:: yaml
   :name: cinder-pure-openstackcontrolplane
@@ -147,6 +155,7 @@ control plane with the FlashArray cinder backend(s):
               - cinder-volume-pure-secrets1
             networkAttachments:
             - storage
+            - storageMgmt
             replicas: 1
             resources: {}
           pure-iscsi-2:
@@ -158,6 +167,7 @@ control plane with the FlashArray cinder backend(s):
               - cinder-volume-pure-secrets2
             networkAttachments:
             - storage
+            - storageMgmt
             replicas: 1
             resources: {}
 
@@ -166,22 +176,15 @@ The above example is again for two backends. Also notice that the Cinder configu
 part of the deployment (notice that *pure-iscsi* / *pure-iscsi-2* here must match the ones
 used in the *OpenStackVersion* above):
 
-Note that if you are using the NVMe volume driver an addtional parameter of
+Note that if you are using the NVMe volume driver an additional parameter of
 ``pure_nvme_transport=tcp`` will needed to be added into the backend stanza(s).
 
-Apply the custom configurations
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-After ensuring that you full admininstrative access to the OpenShift cluster, apply
-the above configuration files:
+Save this file and update:
 
 .. code-block:: bash
-  :name: pure-cinder-apply
+   :name: openstackversion-apply
 
-  $ oc apply -f ./pure-c-vol.yaml
-  $ oc apply -f ./pure-secrets.yaml
-  $ oc apply -f ./pure-c-vol-image.yaml
-  $ oc apply -f ./pure-c-vol-config.yaml
+   $ oc apply -f openstack_control_plane.yaml
 
 Test the Deployed Back Ends
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -193,7 +196,6 @@ run the OpenStack commands to check if the Cinder services are up:
   :name: cinder-service-list
 
   $ oc rsh openstackclient
-  sh-5.1$ export OS_PASSWORD=<your password>
   sh-5.1$ openstack volume service list
 
 
