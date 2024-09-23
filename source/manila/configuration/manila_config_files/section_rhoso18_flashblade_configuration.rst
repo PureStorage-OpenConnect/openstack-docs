@@ -14,7 +14,7 @@ deploy single or multiple FlashBlade manila back ends in a RHOSO cluster.
 .. note::
 
   For more information about RHOSO, please refer to its `documentation pages
-  <https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0-beta/html/deploying_red_hat_openstack_services_on_openshift/index>`_.
+  <https://docs.redhat.com/en/documentation/red_hat_openstack_services_on_openshift/18.0/html/deploying_red_hat_openstack_services_on_openshift/index>`_.
 
 Requirements
 ------------
@@ -66,7 +66,7 @@ Create a Secret file
 It is necessary to create a secret file that will contain the access
 credential(s) for your backend Pure FlashBlade(s) in your RHOSO deployment.
 
-In this following example file (``pure-secrets.yaml``) secrets are provided for
+In this following example file (``pure-fb-secrets.yaml``) secrets are provided for
 a FlashBlade. If using multiple backends you need to define a unique secret for each.
 
 .. code-block:: yaml
@@ -82,7 +82,7 @@ Create the OpenShift secret based on the above configuration file:
 .. code-block:: bash
   :name: manila-secret
 
-    $ oc create secret generic pure-fb-secret --from-file=pure-secrets.yaml
+    $ oc create secret generic pure-fb-secret --from-file=pure-fb-secrets.yaml
 
 For security, you may now delete the configuration file.
 
