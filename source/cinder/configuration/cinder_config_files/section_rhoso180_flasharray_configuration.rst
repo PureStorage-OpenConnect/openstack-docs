@@ -26,8 +26,8 @@ In Red Hat OpenStack Services on OpenShift 18.0, the FlashArray cinder volume dr
 the following dataplanes:
 
 - iSCSI
+- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat])
 - FibreChannel [certification pending]
-- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat]) [certification pending]
 
 Requirements
 ------------
@@ -70,8 +70,10 @@ Ensure the certified image is added to the ``openstackversion`` CR.  This is def
   spec:
     customContainerImages:
       cinderVolumeImages:
-        pure-iscsi: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
-        pure-iscsi-2: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
+        pure1: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
+        pure2: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
+
+This example is for two Pure Storage backends - defined later in the OpenStackControlPlane CR.
 
 Save this file and update:
 
@@ -102,7 +104,7 @@ two backend FlashArrays. You need to define a unique secret for each of your bac
   type: Opaque
   stringData:
     pure-secrets.conf: |
-      [pure-iscsi]
+      [pure1]
       san_ip=<INSERT YOUR FA1 IP HERE>
       pure_api_token=<INSERT YOUR FA1 API TOKEN HERE>
   ---
@@ -116,7 +118,7 @@ two backend FlashArrays. You need to define a unique secret for each of your bac
   type: Opaque
   stringData:
     pure-secrets.conf: |
-      [pure-iscsi-2]
+      [pure2]
       san_ip=<INSERT YOUR FA2 IP HERE>
       pure_api_token=<INSERT YOUR FA2 API TOKEN HERE>
 
@@ -133,10 +135,10 @@ Update the OpenStack Control Plane
 Open your OpenStackControlPlane CR file, ``openstack_control_plane.yaml``. Edit the CR file and add in the
 Pure Storage Cinder volume backend.
 
-For example:
+**iSCSI driver example:**
 
 .. code-block:: yaml
-  :name: cinder-pure-openstackcontrolplane
+  :name: cinder-pureiscsi-openstackcontrolplane
 
   apiVersion: core.openstack.org/v1beta1
   kind: OpenStackControlPlane
@@ -146,10 +148,10 @@ For example:
     cinder:
       template:
         cinderVolumes:
-          pure-iscsi:
+          pure1:
             customServiceConfig: |
-              [pure-iscsi]
-              volume_backend_name=pure-iscsi
+              [pure1]
+              volume_backend_name=pure
               volume_driver=cinder.volume.drivers.pure.PureISCSIDriver
             customServiceConfigSecrets:
               - cinder-volume-pure-secrets1
@@ -158,10 +160,10 @@ For example:
             - storageMgmt
             replicas: 1
             resources: {}
-          pure-iscsi-2:
+          pure2:
             customServiceConfig: |
-              [pure-iscsi-2]
-              volume_backend_name=pure-iscsi-2
+              [pure2]
+              volume_backend_name=pure2
               volume_driver=cinder.volume.drivers.pure.PureISCSIDriver
             customServiceConfigSecrets:
               - cinder-volume-pure-secrets2
@@ -171,13 +173,50 @@ For example:
             replicas: 1
             resources: {}
 
+**NVMe-TCP driver example:**
 
-The above example is again for two backends. Also notice that the Cinder configuration
-part of the deployment (notice that *pure-iscsi* / *pure-iscsi-2* here must match the ones
+.. code-block:: yaml
+  :name: cinder-purenvme-openstackcontrolplane
+
+  apiVersion: core.openstack.org/v1beta1
+  kind: OpenStackControlPlane
+  metadata:
+    name: openstack
+  spec:
+    cinder:
+      template:
+        cinderVolumes:
+          pure1:
+            customServiceConfig: |
+              [pure1]
+              volume_backend_name=pure
+              volume_driver=cinder.volume.drivers.pure.PureNVMEDriver
+              pure_nvme_transport=tcp
+            customServiceConfigSecrets:
+              - cinder-volume-pure-secrets1
+            networkAttachments:
+            - storage
+            - storageMgmt
+            replicas: 1
+            resources: {}
+          pure2:
+            customServiceConfig: |
+              [pure2]
+              volume_backend_name=pure2
+              volume_driver=cinder.volume.drivers.pure.PureNVMEDriver
+              pure_nvme_transport=tcp
+            customServiceConfigSecrets:
+              - cinder-volume-pure-secrets2
+            networkAttachments:
+            - storage
+            - storageMgmt
+            replicas: 1
+            resources: {}
+
+ 
+The above examples are for two backends. Notice that the Cinder configuration
+part of the deployment (*pure1* / *pure2*) here must match the names
 used in the *OpenStackVersion* above):
-
-Note that if you are using the NVMe volume driver an additional parameter of
-``pure_nvme_transport=tcp`` will needed to be added into the backend stanza(s).
 
 Save this file and update:
 
@@ -204,10 +243,10 @@ Run the following commands to create the volume types mapped to the deployed bac
 .. code-block:: bash
   :name: create-volume-types
 
-  sh-5.1$ openstack volume type create pure-iscsi
-  sh-5.1$ openstack volume type set --property volume_backend_name=pure-iscsi pure-iscsi
-  sh-5.1$ openstack volume type create pure-iscsi-2
-  sh-5.1$ openstack volume type set --property volume_backend_name=pure-iscsi-2 pure-iscsi-2
+  sh-5.1$ openstack volume type create pure1
+  sh-5.1$ openstack volume type set --property volume_backend_name=pure1 pure1
+  sh-5.1$ openstack volume type create pure2
+  sh-5.1$ openstack volume type set --property volume_backend_name=pure2 pure2
 
 Make sure that you're able to create Cinder volumes with the configured volume
 types:
@@ -215,5 +254,5 @@ types:
 .. code-block:: bash
   :name: create-volumes
 
-  sh-5.1$ openstack volume create --type pure-iscsi --size 1 v1
-  sh-5.1$ openstack volume create --type pure-iscsi-2 --size 1 v2
+  sh-5.1$ openstack volume create --type pure1 --size 1 v1
+  sh-5.1$ openstack volume create --type pure2 --size 1 v2
