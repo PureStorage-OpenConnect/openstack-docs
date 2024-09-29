@@ -12,5 +12,8 @@ Cinder Configuration Files
    cinder_config_files/section_rhosp161_director_flasharray_configuration.rst
    cinder_config_files/section_rhosp162_director_flasharray_configuration.rst
    cinder_config_files/section_rhosp170_director_flasharray_configuration.rst
+   cinder_config_files/section_rhosp171_director_flasharray_configuration.rst
+   cinder_config_files/section_rhoso180_flasharray_configuration.rst
    cinder_config_files/section_flasharray-conf-train.rst
    cinder_config_files/section_flasharray-conf-wallaby.rst
+   cinder_config_files/section_flasharray-conf-rhoso18.rst
