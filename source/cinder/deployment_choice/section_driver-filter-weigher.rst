@@ -177,11 +177,11 @@ Table 7.11 Volume properties available for Filter and Goodness functions
 +-----------------------------------+-----------+--------------------------------------------------------------------------------------------------------------------------+
 | ``output_per_sec``                | String    | Total output (in bytes) per second for the array.                                                                        |
 +-----------------------------------+-----------+--------------------------------------------------------------------------------------------------------------------------+
-| ``usec_per_reap_op``              | String    | Current latency per read operation for the array.                                                                        |
+| ``usec_per_read_op``              | String    | Current latency per read operation for the array.                                                                        |
 +-----------------------------------+-----------+--------------------------------------------------------------------------------------------------------------------------+
 | ``usec_per_write_op``             | String    | Current latency per write operation for the array.                                                                       |
 +-----------------------------------+-----------+--------------------------------------------------------------------------------------------------------------------------+
-| ``queue_depth``                   | String    | Current queue depth for the array.                                                                                       |
+| ``queue_depth``                   | String    | Current queue depth for the array - DEPRECATED (to be removed in 2026.1)                                                 |
 +-----------------------------------+-----------+--------------------------------------------------------------------------------------------------------------------------+
 
 Table 7.12 Backend capabilities reported by FlashArray Cinder drivers
