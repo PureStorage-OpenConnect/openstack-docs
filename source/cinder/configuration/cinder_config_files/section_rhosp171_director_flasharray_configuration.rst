@@ -19,7 +19,7 @@ nodes.
 
 .. warning::
 
-  RHOSP17.1 is based on OpenStack Wallaby release with Xena backports. Features
+  RHOSP17.1 is based on OpenStack Wallaby release with upstream backports. Features
   included after Wallaby release may not be available in RHOSP17.1.
 
 Requirements
@@ -57,7 +57,7 @@ Multiple back end configuration
 
 Define Pure Storage Cinder back ends using Custom THT Configuration syntax.
 It's possible to define all the back ends in a single environment file by
-modifying the `cinder-pure-config.yaml` file as follows:
+modifying the ``cinder-pure-config.yaml`` file as follows:
 
   .. code-block:: yaml
     :name: cinder-flasharray-backend1.yaml
@@ -107,12 +107,53 @@ modifying the `cinder-pure-config.yaml` file as follows:
   <./section_flasharray-conf-wallaby.html#optional-cinder-configuration-attributes>`_
   for a complete list of the available Cinder Configuration Options.
 
-.. warning::
 
-  RHOSP17.1 is based on OpenStack Wallaby release and some Xena backports. Features
-  and Configuration Options included after Wallaby release may not be available in
-  RHOSP17.1.
+Using the NVMe-TCP protocol (RHOSP 17.1.4 only)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+From RHOSP 17.1.4 you can now use the Pure NVMe-TCP driver for FlashArray, but you must use
+very specific TripleO configuration files, as this driver is not supported by the standard
+Pure Storage TripleO system.
+
+Create a new environment file ``pure-nvmet-config.yaml`` in your templates directory as follows
+
+.. code-block:: yaml
+  :name: pure-nvmet-config.yaml
+
+  resource_registry:
+    OS::TripleO::Services::CinderBackendNVMeOF: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-backend-nvmeof-puppet.yaml
+
+  parameter_defaults:
+    CinderEnableIscsiBackend: false
+    CinderEnableNVMeOFBackend: true
+    StandaloneExtraConfig:
+      cinder_user_enabled_backends: ['pure1']
+      cinder::config::cinder_config:
+        pure1/volume_backend_name:
+          value: pure1
+        pure1/volume_driver:
+          value: cinder.volume.drivers.pure.PureNVMEDriver
+        pure1/san_ip:
+          value: <SAN IP>
+        pure1/pure_api_token:
+          value: <Pure API token>
+        pure1/pure_nvme_transport:
+          value: tcp
+        pure1/pure_eradicate_on_delete:
+          value: true
+      tripleo::profile::base::cinder::volume::cinder_enable_nvmeof_backend: false
+    ControllerParameters:
+      ExtraKernelPackages:
+        nvme-cli: {}
+      ExtraKernelModules:
+        nvme-fabrics: {}
+    ComputeParameters:
+      ExtraKernelPackages:
+        nvme-cli: {}
+      ExtraKernelModules:
+        nvme-fabrics: {}
+
+Add this file to your ``openstack overcloud deploy`` command (``-e pure-nvmet-config.yaml``) 
 
 Use Certified Pure Storage Cinder Volume Container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
