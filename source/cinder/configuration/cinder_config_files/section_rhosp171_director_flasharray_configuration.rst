@@ -211,39 +211,3 @@ types:
   [stack@rhosp-undercloud ~]$ source ~/overcloudrc
   (overcloud) [stack@rhosp-undercloud ~]$ cinder create --volume-type pure1 --name v1 1
   (overcloud) [stack@rhosp-undercloud ~]$ cinder create --volume-type pure2 --name v2 1
-
-Special Cases
--------------
-
-LUN Count > 255
-^^^^^^^^^^^^^^^
-
-When the number of LUNs presented to a Nova compute host, or more specifically the LUN ID
-exceeds 255, the Purity operating system in the FlashArray will switch the LUN ID addressing
-from peripheral to flat, using the SAM-4 01b method.
-
-Which Red Hat Enterprise Linux can deal with this addressing change and LUN ID of 256 and higher
-will correctly mount manually, there is an issue in OpenStack that prevents these LUN ID values
-from being correctly mounted. In this case there will be no indication in the cinder-volume
-service logs or from the Pure Storage Cinder driver that the mount has failed.
-
-The only indication of the problem will come in the nova-compute log file (when ``debug=true``
-has been set in the Nova configuration file), where the following example message will be seen:
-
-.. code-block:: bash
-  :name: nove-logs
-
-  2023-02-03 18:00:40.439 8 DEBUG os_brick.initiator.linuxscsi [req-2b5c8045-6845-4b92-8f13-2370cf907a8c - default default]
-        Searching for a device in session 6 and hctl ('12', '0', '0', 356) yield: None device_name_by_hctl /usr/lib/python3.6/site-packages/os_brick/initiator/linuxscsi.py:698
-
-Until this issue is resolved in OpenStack, the workaround for Pure Storage is to set the
-``host_personality`` parameter in the backend array stanza in the configuration file to the
-following:
-
-.. code-block:: bash
-  :name: personality
-
-  host_personality=oracle-vm-server
-
-This parameter instructs the FlashArray to use peripheral LUN ID addressing for all LUN, no
-matter the LUN ID.

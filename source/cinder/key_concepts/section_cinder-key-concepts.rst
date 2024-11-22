@@ -275,4 +275,4 @@ NVMe Support
 ------------
 
 As of the Zed release the FlashArray driver supports NVMe-RoCE as a transport protocol,
-and from the 2023.2 (Bocat) release NVMe-TCP is supported.
+and from the 2023.2 (Bobcat) release NVMe-TCP is supported.
