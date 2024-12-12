@@ -19,7 +19,7 @@ nodes.
 
 .. warning::
 
-  RHOSP17.1 is based on OpenStack Wallaby release with Xena backports. Features
+  RHOSP17.1 is based on OpenStack Wallaby release with upstream backports. Features
   included after Wallaby release may not be available in RHOSP17.1.
 
 Requirements
@@ -57,7 +57,7 @@ Multiple back end configuration
 
 Define Pure Storage Cinder back ends using Custom THT Configuration syntax.
 It's possible to define all the back ends in a single environment file by
-modifying the `cinder-pure-config.yaml` file as follows:
+modifying the ``cinder-pure-config.yaml`` file as follows:
 
   .. code-block:: yaml
     :name: cinder-flasharray-backend1.yaml
@@ -107,12 +107,53 @@ modifying the `cinder-pure-config.yaml` file as follows:
   <./section_flasharray-conf-wallaby.html#optional-cinder-configuration-attributes>`_
   for a complete list of the available Cinder Configuration Options.
 
-.. warning::
 
-  RHOSP17.1 is based on OpenStack Wallaby release and some Xena backports. Features
-  and Configuration Options included after Wallaby release may not be available in
-  RHOSP17.1.
+Using the NVMe-TCP protocol (RHOSP 17.1.4 only)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+From RHOSP 17.1.4 you can now use the Pure NVMe-TCP driver for FlashArray, but you must use
+very specific TripleO configuration files, as this driver is not supported by the standard
+Pure Storage TripleO system.
+
+Create a new environment file ``pure-nvmet-config.yaml`` in your templates directory as follows
+
+.. code-block:: yaml
+  :name: pure-nvmet-config.yaml
+
+  resource_registry:
+    OS::TripleO::Services::CinderBackendNVMeOF: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-backend-nvmeof-puppet.yaml
+
+  parameter_defaults:
+    CinderEnableIscsiBackend: false
+    CinderEnableNVMeOFBackend: true
+    StandaloneExtraConfig:
+      cinder_user_enabled_backends: ['pure1']
+      cinder::config::cinder_config:
+        pure1/volume_backend_name:
+          value: pure1
+        pure1/volume_driver:
+          value: cinder.volume.drivers.pure.PureNVMEDriver
+        pure1/san_ip:
+          value: <SAN IP>
+        pure1/pure_api_token:
+          value: <Pure API token>
+        pure1/pure_nvme_transport:
+          value: tcp
+        pure1/pure_eradicate_on_delete:
+          value: true
+      tripleo::profile::base::cinder::volume::cinder_enable_nvmeof_backend: false
+    ControllerParameters:
+      ExtraKernelPackages:
+        nvme-cli: {}
+      ExtraKernelModules:
+        nvme-fabrics: {}
+    ComputeParameters:
+      ExtraKernelPackages:
+        nvme-cli: {}
+      ExtraKernelModules:
+        nvme-fabrics: {}
+
+Add this file to your ``openstack overcloud deploy`` command (``-e pure-nvmet-config.yaml``) 
 
 Use Certified Pure Storage Cinder Volume Container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -211,39 +252,3 @@ types:
   [stack@rhosp-undercloud ~]$ source ~/overcloudrc
   (overcloud) [stack@rhosp-undercloud ~]$ cinder create --volume-type pure1 --name v1 1
   (overcloud) [stack@rhosp-undercloud ~]$ cinder create --volume-type pure2 --name v2 1
-
-Special Cases
--------------
-
-LUN Count > 255
-^^^^^^^^^^^^^^^
-
-When the number of LUNs presented to a Nova compute host, or more specifically the LUN ID
-exceeds 255, the Purity operating system in the FlashArray will switch the LUN ID addressing
-from peripheral to flat, using the SAM-4 01b method.
-
-Which Red Hat Enterprise Linux can deal with this addressing change and LUN ID of 256 and higher
-will correctly mount manually, there is an issue in OpenStack that prevents these LUN ID values
-from being correctly mounted. In this case there will be no indication in the cinder-volume
-service logs or from the Pure Storage Cinder driver that the mount has failed.
-
-The only indication of the problem will come in the nova-compute log file (when ``debug=true``
-has been set in the Nova configuration file), where the following example message will be seen:
-
-.. code-block:: bash
-  :name: nove-logs
-
-  2023-02-03 18:00:40.439 8 DEBUG os_brick.initiator.linuxscsi [req-2b5c8045-6845-4b92-8f13-2370cf907a8c - default default]
-        Searching for a device in session 6 and hctl ('12', '0', '0', 356) yield: None device_name_by_hctl /usr/lib/python3.6/site-packages/os_brick/initiator/linuxscsi.py:698
-
-Until this issue is resolved in OpenStack, the workaround for Pure Storage is to set the
-``host_personality`` parameter in the backend array stanza in the configuration file to the
-following:
-
-.. code-block:: bash
-  :name: personality
-
-  host_personality=oracle-vm-server
-
-This parameter instructs the FlashArray to use peripheral LUN ID addressing for all LUN, no
-matter the LUN ID.
