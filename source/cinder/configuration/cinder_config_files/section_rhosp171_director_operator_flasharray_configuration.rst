@@ -32,7 +32,7 @@ Prepare the environment files
 
 RHOSPdO still makes use of **TripleO Heat Templates (THT)**, which allows you to define
 the Overcloud resources by creating environment files as defined in 
-:ref:`purestorage-flsharray-rhosp171`.
+:ref:`Deploying Pure Storage FlashArray Cinder driver in a Red Hat OpenStack Platform 17.1<purestorage-flsharray-rhosp171>`.
 
 It is not required to to use the `pure-temp.yaml` file for a RHOSPdO deployment.
 
@@ -48,4 +48,4 @@ This configuration file needs to be saved in the `heat-env-config` directory tha
 will be used to create the `heat-env-config ConfigMap`. See the Red Hat director
 Operator documentation for more details on this.
 
-Once the new ConfigMap has been created the OpenStack environemtn can be (re)deployed.
+Once the new ConfigMap has been created the OpenStack environment can be (re)deployed.
