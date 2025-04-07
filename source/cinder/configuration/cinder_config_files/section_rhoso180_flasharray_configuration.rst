@@ -27,7 +27,7 @@ the following dataplanes:
 
 - iSCSI
 - FibreChannel [certification pending]
-- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat]) [certification pending]
+- NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat])
 
 Requirements
 ------------
@@ -133,10 +133,10 @@ Update the OpenStack Control Plane
 Open your OpenStackControlPlane CR file, ``openstack_control_plane.yaml``. Edit the CR file and add in the
 Pure Storage Cinder volume backend.
 
-For example:
+**iSCSI driver example:**
 
 .. code-block:: yaml
-  :name: cinder-pure-openstackcontrolplane
+  :name: cinder-pureiscsi-openstackcontrolplane
 
   apiVersion: core.openstack.org/v1beta1
   kind: OpenStackControlPlane
@@ -146,10 +146,10 @@ For example:
     cinder:
       template:
         cinderVolumes:
-          pure-iscsi:
+          pure1:
             customServiceConfig: |
-              [pure-iscsi]
-              volume_backend_name=pure-iscsi
+              [pure1]
+              volume_backend_name=pure
               volume_driver=cinder.volume.drivers.pure.PureISCSIDriver
             customServiceConfigSecrets:
               - cinder-volume-pure-secrets1
@@ -158,10 +158,10 @@ For example:
             - storageMgmt
             replicas: 1
             resources: {}
-          pure-iscsi-2:
+          pure2:
             customServiceConfig: |
-              [pure-iscsi-2]
-              volume_backend_name=pure-iscsi-2
+              [pure2]
+              volume_backend_name=pure2
               volume_driver=cinder.volume.drivers.pure.PureISCSIDriver
             customServiceConfigSecrets:
               - cinder-volume-pure-secrets2
@@ -171,7 +171,83 @@ For example:
             replicas: 1
             resources: {}
 
+**NVMe-TCP driver example:**
 
+.. code-block:: yaml
+  :name: cinder-purenvme-openstackcontrolplane
+
+  apiVersion: core.openstack.org/v1beta1
+  kind: OpenStackControlPlane
+  metadata:
+    name: openstack
+  spec:
+    cinder:
+      template:
+        cinderVolumes:
+          pure1:
+            customServiceConfig: |
+              [pure1]
+              volume_backend_name=pure
+              volume_driver=cinder.volume.drivers.pure.PureNVMEDriver
+              pure_nvme_transport=tcp
+            customServiceConfigSecrets:
+              - cinder-volume-pure-secrets1
+            networkAttachments:
+            - storage
+            - storageMgmt
+            replicas: 1
+            resources: {}
+          pure2:
+            customServiceConfig: |
+              [pure2]
+              volume_backend_name=pure2
+              volume_driver=cinder.volume.drivers.pure.PureNVMEDriver
+              pure_nvme_transport=tcp
+            customServiceConfigSecrets:
+              - cinder-volume-pure-secrets2
+            networkAttachments:
+            - storage
+            - storageMgmt
+            replicas: 1
+            resources: {}
+
+**FC driver example:**
+
+.. code-block:: yaml
+  :name: cinder-purefc-openstackcontrolplane
+
+  apiVersion: core.openstack.org/v1beta1
+  kind: OpenStackControlPlane
+  metadata:
+    name: openstack
+  spec:
+    cinder:
+      template:
+        cinderVolumes:
+          pure1:
+            customServiceConfig: |
+              [pure1]
+              volume_backend_name=pure
+              volume_driver=cinder.volume.drivers.pure.PureFCDriver
+            customServiceConfigSecrets:
+              - cinder-volume-pure-secrets1
+            networkAttachments:
+            - storage
+            - storageMgmt
+            replicas: 1
+            resources: {}
+          pure2:
+            customServiceConfig: |
+              [pure2]
+              volume_backend_name=pure2
+              volume_driver=cinder.volume.drivers.pure.PureFCDriver
+            customServiceConfigSecrets:
+              - cinder-volume-pure-secrets2
+            networkAttachments:
+            - storage
+            - storageMgmt
+            replicas: 1
+            resources: {}
 The above example is again for two backends. Also notice that the Cinder configuration
 part of the deployment (notice that *pure-iscsi* / *pure-iscsi-2* here must match the ones
 used in the *OpenStackVersion* above):
