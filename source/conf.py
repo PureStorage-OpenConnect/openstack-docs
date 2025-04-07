@@ -65,7 +65,8 @@ releases = [
     'austin', 'bexar', 'cactus', 'diablo', 'essex', 'folsom', 'grizzly',
     'havana', 'icehouse', 'juno', 'kilo', 'liberty', 'mitaka', 'newton',
     'ocata', 'pike', 'queens', 'rocky', 'stein', 'train', 'ussuri', 'victoria',
-    'wallaby', 'xena', 'yoga', 'zed', '2023.1', '2023.2', '2024.1', '2024.2'
+    'wallaby', 'xena', 'yoga', 'zed', '2023.1', '2023.2', '2024.1', '2024.2',
+    '2025.1'
 ]
 unnamed = list(string.ascii_lowercase[len(releases) % 26:])
 releases += unnamed
@@ -96,7 +97,7 @@ if watermark == '':
     ).read().strip(' \n\t').lower().split('\n'))
     if len(stable_branches) == 0 or '' in stable_branches:
         # Can be removed as soon as we have stable branches
-        watermark = "2024.2 DRAFT"
+        watermark = "2025.1"
     else:
         last_stable_release = stable_branches[-1].split('stable/')[-1]
         try:
@@ -131,9 +132,9 @@ copyright = u'2024, Pure Storage Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '2024.2 DRAFT'
+version = '2025.1'
 # The full version, including alpha/beta/rc tags.
-release = '2024.2 DRAFT'
+release = '2025.1'
 
 # A few variables have to be set for the log-a-bug feature.
 #   giturl: The location of conf.py on Git. Must be set manually.
