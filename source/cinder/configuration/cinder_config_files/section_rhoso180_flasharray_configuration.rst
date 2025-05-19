@@ -27,7 +27,7 @@ the following dataplanes:
 
 - iSCSI
 - NVMe-TCP (support backported from OpenStack 2023.2 [Bobcat])
-- FibreChannel [certification pending]
+- FibreChannel
 
 Requirements
 ------------
