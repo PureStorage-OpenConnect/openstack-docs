@@ -3,12 +3,12 @@
 Triage and Data Collection
 ==========================
 
-When you run into an issue with the Pure Storage OpenStack integrations, you may
+When you run into an issue with the Everpure OpenStack integrations, you may
 
 - seek help in the
-  `Pure Storage OpenStack Slack Channel <https://code-purestorage.slack.com/>`_ , or
+  `Everpure OpenStack Slack Channel <https://code-purestorage.slack.com/>`_ , or
 - open a support request, or
-- contact your Pure Storage account representative.
+- contact your everpure account representative.
 
 OpenStack log and configuration files provide information that aid in triaging
 bugs. As a rule of thumb log files need to be collected for the processes
