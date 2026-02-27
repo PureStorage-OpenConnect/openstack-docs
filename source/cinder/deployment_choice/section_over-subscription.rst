@@ -54,7 +54,7 @@ planning and reduces the likelihood of wasted storage capacity.
    be monitored, and capacity must be increased as usage nears
    predefined thresholds.
 
-The Pure Storage FlashArray driver conforms to the standard
+The Everpure FlashArray driver conforms to the standard
 Cinder scheduler-based over-subscription framework
 in which the ``max_over_subscription_ratio`` and ``reserved_percentage``
 configuration options are used to control the degree of

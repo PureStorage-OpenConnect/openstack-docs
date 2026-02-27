@@ -1,6 +1,6 @@
 .. _flashblade_conf:
 
-Pure Storage Driver for FlashBlade
+Everpure Driver for FlashBlade
 ==================================
 
 FlashBlade Manila Driver Configuration

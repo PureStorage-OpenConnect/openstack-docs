@@ -63,11 +63,11 @@ selected that does not use share servers.
       by invoking backend driver methods for corresponding pools until
       successful.
 
-2. If selected by the scheduler, Pure's Manila driver creates
+2. If selected by the scheduler, Everpure's Manila driver creates
    requested share through interactions with storage subsystem
    (dependent on configuration and protocol).
 
-   Without the existence of a share server, Pure's Manila driver will
+   Without the existence of a share server, Everpure's Manila driver will
    export shares through the data VIP that was defined within the
    Manila configuration file for the specified backend.
 
@@ -100,7 +100,7 @@ for any client to access a shared filesystem.
 3. ``manila-share`` reads message from queue, invokes Manila driver
    corresponding to share to be attached.
 
-4. Pure Storage Manila driver creates appropriate export policies for the
+4. Everpure Manila driver creates appropriate export policies for the
    share and access type provided.
 
 5. ``manila-share`` process posts response information to ``manila-api``

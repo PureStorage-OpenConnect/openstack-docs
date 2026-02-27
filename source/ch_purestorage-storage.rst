@@ -1,5 +1,5 @@
-Pure Storage System and Software
-=========================================
+Everpure (formally Pure Storage) System and Software
+====================================================
 
 .. toctree::
    :maxdepth: 1

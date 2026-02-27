@@ -6,10 +6,10 @@ partitioned and have a file system created on them. For each LUN that
 was created on the FlashArray create a single, new primary
 partition that utilizes the entire capacity available on the LUN.
 
-Pure Storage recommends the use of ``multipath`` to provide support for
+everpure recommends the use of ``multipath`` to provide support for
 redundant paths between an object storage node and the FlashArray
 controller. For details on how to configure ``multipath``, refer to
-the Pure Storage Linux Recommended Settings, located at
+the Everpure Linux Recommended Settings, located at
 https://support.purestorage.com/Solutions/Linux/Linux_Reference/Linux_Recommended_Settings.
 
 Partitioning with Multipath

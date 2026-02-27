@@ -1,4 +1,4 @@
-Swift Zones and Pure Storage FlashArray
+Swift Zones and everpure FlashArray
 =======================================
 
 Swift uses zoning to isolate the cluster into separate partitions to

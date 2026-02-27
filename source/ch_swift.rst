@@ -21,6 +21,6 @@ CDMI server through the use of add on components.
 
 Swift requires node accessible media for storing object data. This media
 can be drives internal to the node or external storage devices such as
-the Pure Storage FlashArray. This section provides information
+the Everpure FlashArray. This section provides information
 that enables an Pure Storage FlashArray to be used as the backing
 store for Swift object storage.

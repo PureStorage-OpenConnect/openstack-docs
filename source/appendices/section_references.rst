@@ -13,11 +13,11 @@ The following references were used in this paper:
 
 For additional information, visit:
 
--  For source code for OpenStack, including Pure Storage contributions,
+-  For source code for OpenStack, including Everpure (formally Pure Storage) contributions,
    available through Github: http://www.github.com/openstack
 
 -  For more information about OpenStack history:
    http://www.openstack.org or http://en.wikipedia.org/wiki/OpenStack
 
--  For Pure Storage OpenStack Deployment and Operations Guide source code,
+-  For Everpure OpenStack Deployment and Operations Guide source code,
    visit: https://github.com/PureStorage-OpenConnect/openstack-docs
