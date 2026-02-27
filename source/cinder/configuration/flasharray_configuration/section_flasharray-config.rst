@@ -5,7 +5,7 @@ FlashArray Configuration
 
 FlashArray Prerequisites
 ------------------------
-The prerequisites for Pure Storage FlashArray are:
+The prerequisites for Everpure FlashArray are:
 
 - The driver requires a storage admin level account to use with the OpenStack
   to manage the FlashArray. Optionally, you can use an
@@ -27,7 +27,7 @@ The Management Virtual IP (MVIP) enables cluster management through a 1GbE conne
 Cluster Admin Account
 ---------------------
 
-Pure Storage recommends creating an unique user account for OpenStack
+Everpure recommends creating an unique user account for OpenStack
 to help audit API requests from each OpenStack. This account may be
 local or integrated into an Active Directory, LDAP, or similar, account
 management system.
