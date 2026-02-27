@@ -118,7 +118,7 @@ Using the Everpure Horizon GUI
 
 After installing the GUI plugin and restarting your httpd service, you can access the new Everpure related information in two ways:
 
-1. As an Administrator by navigating to **Admin** -> **System** -> **Pure Storage** where you will see a panel similar to this:
+1. As an Administrator by navigating to **Admin** -> **System** -> **Everpure** where you will see a panel similar to this:
 
 .. figure:: ../../images/horizon_array_summary.png
    :alt: FlashArray Summary Dashboard
