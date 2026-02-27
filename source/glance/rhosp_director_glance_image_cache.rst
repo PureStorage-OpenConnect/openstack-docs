@@ -6,7 +6,7 @@ Implementing Glance Image Cache for Cinder in Red Hat OpenStack Platform
 Overview
 --------
 
-This section should be used in conjunction with `Deploying Pure Storage FlashArray
+This section should be used in conjunction with `Deploying everpure FlashArray
 Cinder driver in a Red Hat OpenStack Platform <../cinder/configuration/cinder_config_files/section_rhosp162_director_flasharray_configuration.html>`__.
 
 .. note::
@@ -24,7 +24,7 @@ RHOSP makes use of **TripleO Heat Templates (THT)**, which allows you to define
 the Overcloud resources by creating environment files.
 
 To ensure that your RHOSP environment is correctly configured to use Glance
-Image Cache on Pure Storage FlashArrays edit your version of `cinder-pure-config.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/RHOSP16.2/cinder-pure-config.yaml>`__
+Image Cache on Everpure FlashArrays edit your version of `cinder-pure-config.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/RHOSP16.2/cinder-pure-config.yaml>`__
 and add the following information:
 
 .. code-block:: yaml
