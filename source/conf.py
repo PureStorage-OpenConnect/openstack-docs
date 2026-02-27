@@ -66,7 +66,7 @@ releases = [
     'havana', 'icehouse', 'juno', 'kilo', 'liberty', 'mitaka', 'newton',
     'ocata', 'pike', 'queens', 'rocky', 'stein', 'train', 'ussuri', 'victoria',
     'wallaby', 'xena', 'yoga', 'zed', '2023.1', '2023.2', '2024.1', '2024.2',
-    '2025.1'
+    '2025.1', '2025.2'
 ]
 unnamed = list(string.ascii_lowercase[len(releases) % 26:])
 releases += unnamed
@@ -97,7 +97,7 @@ if watermark == '':
     ).read().strip(' \n\t').lower().split('\n'))
     if len(stable_branches) == 0 or '' in stable_branches:
         # Can be removed as soon as we have stable branches
-        watermark = "2025.2 DRAFT"
+        watermark = "2026.1 DRAFT"
     else:
         last_stable_release = stable_branches[-1].split('stable/')[-1]
         try:
@@ -132,9 +132,9 @@ copyright = u'2026, Everpure Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = '2025.2 DRAFT'
+version = '2026.1 DRAFT'
 # The full version, including alpha/beta/rc tags.
-release = '2025.2 DRAFT'
+release = '2026.1 DRAFT'
 
 # A few variables have to be set for the log-a-bug feature.
 #   giturl: The location of conf.py on Git. Must be set manually.
