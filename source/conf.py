@@ -123,9 +123,9 @@ sphinxmark_text_size = 100
 # -- Building the html context -----------------------------------------------
 
 # General information about the project.
-project = u'Pure Storage OpenStack Docs'
+project = u'Everpure (formally Pure Storage) OpenStack Docs'
 bug_tag = u'docs, dog'
-copyright = u'2024, Pure Storage Inc.'
+copyright = u'2026, Everpure Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -311,7 +311,7 @@ latex_elements = {
 latex_documents = [
     ('index', 'DeployOpsGuide.tex',
      u'OpenStack Deployment and Operations Guide',
-     u'Pure Storage Inc.', 'manual'),
+     u'Everpure Inc.', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -356,9 +356,9 @@ man_pages = [
 texinfo_documents = [
     ('index', 'OpenStack Deployment and Operations Guide',
      u'OpenStack Deployment and Operations Guide',
-     u'Pure Storage Inc. ', 'DeployOpsGuide',
+     u'Everpure Inc. ', 'DeployOpsGuide',
      'This guide shows OpenStack end users how to install '
-     'and configure Pure Storage FlashArrays for their OpenStack cloud.',
+     'and configure Everpure (formally Pure Storage) FlashArrays for their OpenStack cloud.',
      'Miscellaneous'),
 ]
 
@@ -381,7 +381,7 @@ locale_dirs = ['locale/']
 
 pdf_documents = [
     ('index', u'DeployOpsGuide', u'OpenStack Deployment and Operations Guide',
-     u'Pure Storage Inc.')
+     u'Everpure Inc.')
 ]
 # -- Options for sphinxcontrib.spelling -----------------------------------------------
 # http://sphinxcontrib-spelling.readthedocs.io/en/latest/customize.htm

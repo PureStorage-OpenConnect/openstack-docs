@@ -19,6 +19,7 @@ Deployers
 Diablo
 Dodsley
 Esker
+everpure
 FC
 Failover
 Fibre
