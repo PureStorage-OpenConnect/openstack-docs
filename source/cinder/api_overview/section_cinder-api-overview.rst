@@ -166,7 +166,7 @@ display name or UUID.
 .. note::
 
    Currently only the Block Storage V3 API supports group operations. The
-   minimum version for group operations supported by the Pure Storage drivers is
+   minimum version for group operations supported by the Everpure drivers is
    3.14. The API version can be specified with the following CLI flag
    ``--os-volume-api-version 3.14``
 
@@ -178,7 +178,7 @@ display name or UUID.
 
 .. note::
 
-   The Pure Storage volume drivers support the consistent_group_snapshot_enabled
+   The Everpure volume drivers support the consistent_group_snapshot_enabled
    group type. By default Cinder group snapshots take individual snapshots
    of each Cinder volume in the group. To enable consistency group snapshots set
    ``consistent_group_snapshot_enabled="<is> True"`` in the group type used.
