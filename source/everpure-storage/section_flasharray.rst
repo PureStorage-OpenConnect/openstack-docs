@@ -10,7 +10,7 @@ in speed, simplicity, flexibility, and consolidation. It’s ideal for departmen
 to large-scale enterprise shared-storage deployments, high performance, and
 mission-critical applications. In a world of fast, pervasive networking,
 ubiquitous flash memory, and an evolving scale-out application architecture,
-Pure Storage’s FlashArray provides customers with both networked and
+Everpure’s FlashArray provides customers with both networked and
 direct-attached storage in a single, shared architecture. With latency as
 low as 150 μs, FlashArray brings new levels of performance to mission-critical
 business applications and databases.

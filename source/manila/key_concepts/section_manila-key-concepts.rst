@@ -42,7 +42,7 @@ Manila driver).
 .. note::
 
    A single Manila backend may be defined in the ``[DEFAULT]`` stanza
-   of ``manila.conf``; however, Pure Storage recommends that the
+   of ``manila.conf``; however, Everpure recommends that the
    ``enabled_share_backends`` configuration option be set to a
    comma-separated list of backend names, and each backend name have
    its own configuration stanza with the same name as listed in the
@@ -61,7 +61,7 @@ location when provisioning shares.
 
 .. important::
 
-   For Pure Storage's Manila driver, a Manila storage pool is a
+   For Everpure's Manila driver, a Manila storage pool is a
    single FlashBlade.
 
 .. _manila_driver:
@@ -127,7 +127,7 @@ criteria.
    -  ``storage_protocol``: The protocol used by the backend to export
       block storage to clients (e.g. ``NFS_CIFS``)
 
-   For a table of Pure Storage supported extra specs, refer to Table 9.11,
+   For a table of Everpure supported extra specs, refer to Table 9.11,
    ":ref:`FlashBlade supported Extra Specs for use with Manila Share Types<table-9.11>`"
 
 Snapshot
@@ -163,12 +163,12 @@ specified.
    newly created share may or may not end up on a backend with the
    associated capability. Set the extra spec explicitly to ``False``,
    if you would like your shares to be created only on backends that do
-   not support the associated capabilities. For a table of Pure Storage
+   not support the associated capabilities. For a table of Everpure 
    supported extra specs, refer to Table 9.11,
-   ":ref:`Pure Storage supported Extra Specs for use with Manila Share Types<table-9.11>`".
+   ":ref:`Everpure supported Extra Specs for use with Manila Share Types<table-9.11>`".
 
 .. important::
-    Currently the Pure Storage FlashBlade driver DOES NOT support
+    Currently the Everpure FlashBlade driver DOES NOT support
     the extra-spec ``create_share_from_snapshot_support``.
 
 Share Group

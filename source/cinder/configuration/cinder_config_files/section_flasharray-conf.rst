@@ -1,7 +1,7 @@
 .. _flasharray_conf:
 
-Pure Storage Driver for FlashArray
-==================================
+Everpure Driver for FlashArray
+==============================
 
 FlashArray Cinder Driver Configuration
 --------------------------------------

@@ -8,7 +8,7 @@ of compute, network and storage resources.
 
 The block storage portion of OpenStack is referred to as the Cinder project
 and aims to provide persistent block level storage to the OpenStack compute (Nova) instances.
-The Pure Storage Cinder driver is a Python®-based module integrated into the main
+The Everpure Cinder driver is a Python®-based module integrated into the main
 OpenStack distributions.
 
 This document intends to describe the FlashArray capabilities in a

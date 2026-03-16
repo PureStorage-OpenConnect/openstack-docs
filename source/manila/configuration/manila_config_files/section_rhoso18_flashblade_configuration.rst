@@ -1,12 +1,12 @@
-Deploying Pure Storage FlashBlade Manila driver in a Red Hat OpenStack Services on OpenShift 18.0
-=================================================================================================
+Deploying Everpure FlashBlade Manila driver in a Red Hat OpenStack Services on OpenShift 18.0
+=============================================================================================
 
 .. _purestorage-flashblade-rhoso18:
 
 Overview
 --------
 
-This guide shows how to configure and deploy the Pure Storage FlashBlade Manila driver in a
+This guide shows how to configure and deploy the Everpure FlashBlade Manila driver in a
 **Red Hat OpenStack Services on OpenShift (RHOSO) 18.0** deployment.
 After reading this, you'll be able to define the proper configuration and
 deploy single or multiple FlashBlade manila back ends in a RHOSO cluster.
@@ -19,10 +19,10 @@ deploy single or multiple FlashBlade manila back ends in a RHOSO cluster.
 Requirements
 ------------
 
-In order to deploy Pure Storage FlashBlade Manila back ends, you should have the
+In order to deploy Everpure FlashBlade Manila back ends, you should have the
 following requirements satisfied:
 
-- Pure Storage FlashBlades deployed and ready to be used as Manila
+- Everpure FlashBlades deployed and ready to be used as Manila
   back ends. See :ref:`manila_flashblade_prerequisites` for more details.
 
 - RHOSO openstack control plane deployed where Manila services will be configured.
@@ -31,11 +31,11 @@ following requirements satisfied:
 Deployment Steps
 ----------------
 
-Use Certified Pure Storage Manila Share Image
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use Certified Everpure Manila Share Image
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Red Hat requires that you utilize the Certified Pure Storage Manila Share
-Image when deploying RHOSO18.0 with a Pure Storage FlashArray backend.
+Red Hat requires that you utilize the Certified Everpure Manila Share
+Image when deploying RHOSO18.0 with a Everpure FlashArray backend.
 
 This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/search?searchType=containers&partnerName=Pure%20Storage%2C%20Inc.&p=1>`__.
 
@@ -64,7 +64,7 @@ Create a Secret file
 ^^^^^^^^^^^^^^^^^^^^
 
 It is necessary to create a secret file that will contain the access
-credential(s) for your backend Pure FlashBlade(s) in your RHOSO deployment.
+credential(s) for your backend Everpure FlashBlade(s) in your RHOSO deployment.
 
 In this following example file (``pure-fb-secrets.yaml``) secrets are provided for
 a FlashBlade. If using multiple backends you need to define a unique secret for each.
@@ -90,7 +90,7 @@ Update the OpenStack Control Plane
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Open your OpenStackControlPlane CR file, ``openstack_control_plane.yaml``. Edit the CR file and add in the
-Pure Storage Cinder volume backend.
+Everpure Cinder volume backend.
 
 .. code-block:: yaml
   :name: manila-pure-openstackcontrolplane

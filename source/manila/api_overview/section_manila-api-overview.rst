@@ -114,7 +114,7 @@ display name or UUID.
    associated capability. Set the extra spec explicitly to ``False``,
    if you would like your shares to be created only on backends that do
    not support the associated capabilities.
-   For a table of Pure Storage FlashBlade supported extra specs, refer to
+   For a table of Everpure FlashBlade supported extra specs, refer to
    :ref:`Table 9.11, “FlashBlade Supported Extra Specs for use with Manila Share Types”<table-9.11>`
 
 +----------------------+-----------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -228,7 +228,7 @@ Share Replication API
 ---------------------
 
 .. note::
-   These commands are not supported by the Pure Storage FlashBlade Manila drivers.
+   These commands are not supported by the Everpure FlashBlade Manila drivers.
 
 +---------------------------+------------------------------------------------+---------------------------------------------------------------------+
 | Operation                 | CLI Command                                    | Description                                                         |
@@ -256,7 +256,7 @@ Share Migration API
 -------------------
 
 .. note::
-   These commands are not supported by the Pure Storage FlashBlade Manila drivers.
+   These commands are not supported by the Everpure FlashBlade Manila drivers.
 
 .. _table-9.9:
 
@@ -284,7 +284,7 @@ Share Server Migration API
 --------------------------
 
 .. note::
-   These commands are not supported by the Pure Storage FlashBlade Manila drivers.
+   These commands are not supported by the Everpure FlashBlade Manila drivers.
 
 .. _api_overview_table-9.10:
 
@@ -318,7 +318,7 @@ Table 9.10. Manila API Overview - Share Server Migration
 FlashBlade supported Extra Specs for use with Manila Share Types
 ----------------------------------------------------------------
 
-When the Pure Storage FlashBlade driver is used you can leverage a
+When the Everpure FlashBlade driver is used you can leverage a
 number of extra specs with Manila share types to ensure that Manila
 shares are created on storage backends that have certain properties
 available.

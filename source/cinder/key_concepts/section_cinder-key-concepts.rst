@@ -117,7 +117,7 @@ are created on storage backends that meet the specified criteria.
 
 .. note::
 
-   Pure Storage drivers support multi-attachment of volumes for iSCSI, FC
+   Everpure drivers support multi-attachment of volumes for iSCSI, FC
    and NVMe protocols from the Stein release. This enables attaching a
    volume to multiple servers simultaneously and can be configured
    by creating an extra-spec ``multiattach="<is> True`` for the associated
@@ -158,7 +158,7 @@ Table 7.1. FlashArray QoS Options
 Generic Volume Groups
 ---------------------
 
-With the Newton release of OpenStack, Pure Storage supports Generic Volume
+With the Newton release of OpenStack, Everpure supports Generic Volume
 Groups in the FlashArray iSCSI/Fibre Channel drivers.
 Existing consistency group operations will be migrated
 to use generic volume group operations in future releases. The existing
@@ -180,7 +180,7 @@ volume groups and the proposed migration can be found at
 Consistency Groups
 ------------------
 
-With the Mitaka release of OpenStack, Pure Storage supports Cinder Consistency
+With the Mitaka release of OpenStack, Everpure supports Cinder Consistency
 Groups with the FlashArray iSCSI/Fibre Channel drivers.
 Consistency group support allows snapshots of multiple volumes
 in the same consistency group to be taken at the same point-in-time to
@@ -253,7 +253,7 @@ policies.
 Disaster Recovery
 -----------------
 
-In the Mitaka release of OpenStack, Pure Storage's Cinder driver for
+In the Mitaka release of OpenStack, Everpure's Cinder driver for
 FlashArray was updated to match Cinder's v2.1 spec
 for replication. This makes it possible to replicate an entire backend,
 and allow all replicated volumes across different pools to fail over

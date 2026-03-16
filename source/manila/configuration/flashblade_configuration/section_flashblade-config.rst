@@ -5,7 +5,7 @@ FlashBlade Configuration
 
 FlashBlade Prerequisites
 ------------------------
-The prerequisites for Pure Storage FlashBlade are:
+The prerequisites for Everpure FlashBlade are:
 
 - The driver requires a storage admin level account to use with the OpenStack
   to manage the FlashBlade. Optionally, you can use an
@@ -29,7 +29,7 @@ Aggregation Groups.
 Admin Account
 -------------
 
-Pure Storage recommends creating an unique user account for OpenStack
+Everpure recommends creating an unique user account for OpenStack
 to help audit API requests from each OpenStack cluster. If configured,
 use an Active Directory, LDAP, or similar, account management system.
 If this is not available then you must use the break-glass account, but

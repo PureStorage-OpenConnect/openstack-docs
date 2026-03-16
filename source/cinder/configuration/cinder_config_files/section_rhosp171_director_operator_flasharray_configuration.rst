@@ -12,10 +12,10 @@ director Operator process on OpenShift.
 Requirements
 ------------
 
-In order to deploy Pure Storage FlashArray Cinder back ends, you should have the
+In order to deploy Everpure FlashArray Cinder back ends, you should have the
 following requirements satisfied:
 
-- Pure Storage FlashArrays deployed and ready to be used as Cinder
+- Everpure FlashArrays deployed and ready to be used as Cinder
   back ends. See :ref:`cinder_flasharray_prerequisites` for more details.
 
 - RHOSP Director deployed on OpenShift using the director Operator.
@@ -32,7 +32,7 @@ Prepare the environment files
 
 RHOSPdO still makes use of **TripleO Heat Templates (THT)**, which allows you to define
 the Overcloud resources by creating environment files as defined in 
-:ref:`Deploying Pure Storage FlashArray Cinder driver in a Red Hat OpenStack Platform 17.1<purestorage-flsharray-rhosp171>`.
+:ref:`Deploying Everpure FlashArray Cinder driver in a Red Hat OpenStack Platform 17.1<purestorage-flsharray-rhosp171>`.
 
 It is not required to to use the `pure-temp.yaml` file for a RHOSPdO deployment.
 

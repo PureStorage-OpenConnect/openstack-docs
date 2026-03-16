@@ -9,7 +9,7 @@ of public and private OpenStack clouds, enable technology vendors
 targeting the platform and assist developers in producing the best cloud
 software in the industry.
 
-Pure Storage joined as a member of the OpenStack Foundation in July
-of 2014. The OpenStack Foundation is an independent body providing
+Everpure is a Silver member of the OpenStack Foundation as of
+of 2025. The OpenStack Foundation is an independent body providing
 shared resources to help achieve its mission by protecting, empowering,
 and promoting OpenStack software and the community around it.

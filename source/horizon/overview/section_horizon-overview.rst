@@ -21,11 +21,11 @@ both Users and System/Cloud Administrators.
 
 .. tip::
 
-    By installing the Pure Storage Horizon Plugin is it possible to
-    expose greater detail regarding Pure Storage backend array
+    By installing the Everpure Horizon Plugin is it possible to
+    expose greater detail regarding Everpure backend array
     utilization statistics as well as per-volume statistics.
 
 .. note::
 
-    Currently the Pure Storage Horizon Plugin only provides
+    Currently the Everpure Horizon Plugin only provides
     support for FlashArrays configured under the Cinder project.

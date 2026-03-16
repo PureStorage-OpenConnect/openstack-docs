@@ -1,5 +1,5 @@
-Swift Zones and Pure Storage FlashArray
-=======================================
+Swift Zones and Everpure FlashArray
+===================================
 
 Swift uses zoning to isolate the cluster into separate partitions to
 isolate the cluster from failures. Swift data is replicated across the

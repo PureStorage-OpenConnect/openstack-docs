@@ -1,12 +1,12 @@
-Deploying Pure Storage FlashBlade Manila driver in a Red Hat OpenStack Platform 17.1
-====================================================================================
+Deploying Everpure FlashBlade Manila driver in a Red Hat OpenStack Platform 17.1
+================================================================================
 
 .. _purestorage-flashblade-rhosp171:
 
 Overview
 --------
 
-This guide shows how to configure and deploy the Pure Storage FlashBlade Manila driver in a
+This guide shows how to configure and deploy the Everpure FlashBlade Manila driver in a
 **Red Hat OpenStack Platform (RHOSP) 17.1** Overcloud, using RHOSP Director.
 After reading this, you'll be able to define the proper environment files and
 deploy single or multiple FlashBlade Manila back ends in RHOSP Overcloud Controller
@@ -25,10 +25,10 @@ nodes.
 Requirements
 ------------
 
-In order to deploy Pure Storage FlashBlade Manila back ends, you should have the
+In order to deploy Everpure FlashBlade Manila back ends, you should have the
 following requirements satisfied:
 
-- Pure Storage FlashBlades deployed and ready to be used as Manila
+- Everpure FlashBlades deployed and ready to be used as Manila
   back ends. See :ref:`manila_flashblade_prerequisites` for more details.
 
 - RHOSP Director user credentials to deploy Overcloud.
@@ -46,16 +46,16 @@ RHOSP makes use of **TripleO Heat Templates (THT)**, which allows you to define
 the Overcloud resources by creating environment files.
 
 To ensure that your RHOSP environment is correctly configured for using
-Pure Storage FlashBlades obtain a copy of `manila-flashblade-config.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/manila/RHOSP17.1/manila-flashblade-config.yaml>`__
-from the Pure Storage TripleO Deployment Config repo and save this in
+Everpure FlashBlades obtain a copy of `manila-flashblade-config.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/manila/RHOSP17.1/manila-flashblade-config.yaml>`__
+from the Everpure TripleO Deployment Config repo and save this in
 the ``/home/stack/templates`` directory. This will be required when
 deploying the Overcloud.
 
-Use Certified Pure Storage Manila Share Container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use Certified Everpure Manila Share Container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Red Hat requires that you utilize the Certified Pure Storage Manila Share
-Container when deploying RHOSP17.1 with a Pure Storage FlashArray backend.
+Red Hat requires that you utilize the Certified Everpure Manila Share
+Container when deploying RHOSP17.1 with a Everpure FlashArray backend.
 
 This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/software/containers/search?q=pure&p=1>`__
 and should be stored in a local registry.

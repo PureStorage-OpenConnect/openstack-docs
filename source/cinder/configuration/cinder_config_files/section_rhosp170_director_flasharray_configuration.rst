@@ -1,12 +1,12 @@
-Deploying Pure Storage FlashArray Cinder driver in a Red Hat OpenStack Platform 17.0
-====================================================================================
+Deploying Everpure FlashArray Cinder driver in a Red Hat OpenStack Platform 17.0
+================================================================================
 
 .. _purestorage-flsharray-rhosp170:
 
 Overview
 --------
 
-This guide shows how to configure and deploy the Pure Storage FlashArray Cinder driver in a
+This guide shows how to configure and deploy the Everpure FlashArray Cinder driver in a
 **Red Hat OpenStack Platform (RHOSP) 17.0** Overcloud, using RHOSP Director.
 After reading this, you'll be able to define the proper environment files and
 deploy single or multiple FlashArray Cinder back ends in RHOSP Overcloud Controller
@@ -25,10 +25,10 @@ nodes.
 Requirements
 ------------
 
-In order to deploy Pure Storage FlashArray Cinder back ends, you should have the
+In order to deploy Everpure FlashArray Cinder back ends, you should have the
 following requirements satisfied:
 
-- Pure Storage FlashArrays deployed and ready to be used as Cinder
+- Everpure FlashArrays deployed and ready to be used as Cinder
   back ends. See :ref:`cinder_flasharray_prerequisites` for more details.
 
 - RHOSP Director user credentials to deploy Overcloud.
@@ -46,16 +46,16 @@ RHOSP makes use of **TripleO Heat Templates (THT)**, which allows you to define
 the Overcloud resources by creating environment files.
 
 To ensure that your RHOSP environment is correctly configured for using
-Pure Storage FlashArrays obtain a copy of `pure-temp.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/RHOSP17.0/pure-temp.yaml>`__
+Everpure FlashArrays obtain a copy of `pure-temp.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/RHOSP17.0/pure-temp.yaml>`__
 and `cinder-pure-config.yaml <https://raw.githubusercontent.com/PureStorage-OpenConnect/tripleo-deployment-configs/master/RHOSP17.0/cinder-pure-config.yaml>`__ 
-from the Pure Storage TripleO Deployment Config repo and save these in
+from the Everpure TripleO Deployment Config repo and save these in
 the ``/home/stack/templates`` directory. These will be required when
 deploying the Overcloud.
 
 Multiple back end configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Define Pure Storage Cinder back ends using Custom THT Configuration syntax.
+Define Everpure Cinder back ends using Custom THT Configuration syntax.
 It's possible to define all the back ends in a single environment file by
 modifying the `cinder-pure-config.yaml` file as follows:
 
@@ -79,7 +79,7 @@ modifying the `cinder-pure-config.yaml` file as follows:
           CinderPureAPIToken: 'anothersecret'
           CinderPureUseChap: true # Specific value for this backend
 
-  Modify the parameter values according to your Pure Storage back end
+  Modify the parameter values according to your Everpure back end
   configuration.
 
 .. note::
@@ -113,11 +113,11 @@ modifying the `cinder-pure-config.yaml` file as follows:
   Options included after Wallaby release are not available in RHOSP17.0.
 
 
-Use Certified Pure Storage Cinder Volume Container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use Certified Everpure Cinder Volume Container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Red Hat requires that you utilize the Certified Pure Storage Cinder Volume
-Container when deploying RHOSP17.0 with a Pure Storage FlashArray backend.
+Red Hat requires that you utilize the Certified Everpure Cinder Volume
+Container when deploying RHOSP17.0 with a Everpure FlashArray backend.
 
 This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/software/containers/search?q=pure&p=1>`__
 and should be stored in a local registry.
@@ -222,7 +222,7 @@ from peripheral to flat, using the SAM-4 01b method.
 Which Red Hat Enterprise Linux can deal with this addressing change and LUN ID of 256 and higher
 will correctly mount manually, there is an issue in OpenStack that prevents these LUN ID values
 from being correctly mounted. In this case there will be no indication in the cinder-volume
-service logs or from the Pure Storage Cinder driver that the mount has failed.
+service logs or from the Everpure Cinder driver that the mount has failed.
 
 The only indication of the problem will come in the nova-compute log file (when ``debug=true``
 has been set in the Nova configuration file), where the following example message will be seen:
@@ -233,7 +233,7 @@ has been set in the Nova configuration file), where the following example messag
   2023-02-03 18:00:40.439 8 DEBUG os_brick.initiator.linuxscsi [req-2b5c8045-6845-4b92-8f13-2370cf907a8c - default default]
         Searching for a device in session 6 and hctl ('12', '0', '0', 356) yield: None device_name_by_hctl /usr/lib/python3.6/site-packages/os_brick/initiator/linuxscsi.py:698
 
-Until this issue is resolved in OpenStack, the workaround for Pure Storage is to set the
+Until this issue is resolved in OpenStack, the workaround for Everpure is to set the
 ``host_personality`` parameter in the backend array stanza in the configuration file to the
 following:
 

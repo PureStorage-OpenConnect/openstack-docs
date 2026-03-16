@@ -1,12 +1,12 @@
-Deploying Pure Storage FlashArray Cinder driver in a Red Hat OpenStack Services on OpenShift 18.0
-=================================================================================================
+Deploying Everpure FlashArray Cinder driver in a Red Hat OpenStack Services on OpenShift 18.0
+=============================================================================================
 
 .. _purestorage-flsharray-rhoso180:
 
 Overview
 --------
 
-This guide shows how to configure and deploy the Pure Storage FlashArray Cinder driver in a
+This guide shows how to configure and deploy the Everpure FlashArray Cinder driver in a
 **Red Hat OpenStack Services on OpenShift (RHOSO) 18.0** deployment.
 After reading this, you'll be able to define the proper configuration and
 deploy single or multiple FlashArray Cinder back ends in a RHOSO cluster.
@@ -19,7 +19,7 @@ deploy single or multiple FlashArray Cinder back ends in a RHOSO cluster.
 .. warning::
 
   RHOSO18.0 is based on OpenStack 2023.1 (Antelope) release with a backport of the 
-  2023.2 (Bobcat) NVMe-TCP Cinder driver for Pure Storage. Other Pure Storage driver features
+  2023.2 (Bobcat) NVMe-TCP Cinder driver for Everpure. Other Everpure driver features
   included after the Antelope release may not be available in RHOSO18.0.
 
 In Red Hat OpenStack Services on OpenShift 18.0, the FlashArray cinder volume drivers support
@@ -32,10 +32,10 @@ the following dataplanes:
 Requirements
 ------------
 
-In order to deploy Pure Storage FlashArray Cinder back ends, you should have the
+In order to deploy Everpure FlashArray Cinder back ends, you should have the
 following requirements satisfied:
 
-- Pure Storage FlashArrays deployed and ready to be used as Cinder
+- Everpure FlashArrays deployed and ready to be used as Cinder
   back ends. See :ref:`cinder_flasharray_prerequisites` for more details.
 
 - RHOSO openstack control plane deployed where Cinder services will be configured.
@@ -50,11 +50,11 @@ Prepare the OpenStack Control Plane
 The following steps need to be applied after the OpenStackControlPlane has been
 successfully deployed in your environment.
 
-Use Certified Pure Storage Cinder Volume Image
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Use Certified Everpure Cinder Volume Image
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Red Hat requires that you utilize the Certified Pure Storage Cinder Volume
-Image when deploying RHOSO18.0 with a Pure Storage FlashArray backend.
+Red Hat requires that you utilize the Certified Everpure Cinder Volume
+Image when deploying RHOSO18.0 with a Everpure FlashArray backend.
 
 This container can be found in the `Red Hat Container Catalog <https://catalog.redhat.com/search?searchType=containers&partnerName=Pure%20Storage%2C%20Inc.&p=1>`__.
 
@@ -73,7 +73,7 @@ Ensure the certified image is added to the ``openstackversion`` CR.  This is def
         pure1: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
         pure2: registry.connect.redhat.com/purestorage/openstack-cinder-volume-pure-18-0:latest
 
-This example is for two Pure Storage backends - defined later in the OpenStackControlPlane CR.
+This example is for two Everpure backends - defined later in the OpenStackControlPlane CR.
 
 Save this file and update:
 
@@ -86,7 +86,7 @@ Create a Secret file
 ^^^^^^^^^^^^^^^^^^^^
 
 It is necessary to create a secret file that will contain the access
-credential(s) for your backend Pure FlashArray(s) in your RHOSO deployment.
+credential(s) for your backend Everpure FlashArray(s) in your RHOSO deployment.
 
 In this following example file (``pure-secrets.yaml``) secrets are provided for
 two backend FlashArrays. You need to define a unique secret for each of your backends.
@@ -133,7 +133,7 @@ Update the OpenStack Control Plane
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Open your OpenStackControlPlane CR file, ``openstack_control_plane.yaml``. Edit the CR file and add in the
-Pure Storage Cinder volume backend.
+Everpure Cinder volume backend.
 
 **iSCSI driver example:**
 
