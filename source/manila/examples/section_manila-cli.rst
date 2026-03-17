@@ -8,7 +8,7 @@ Here we ensure that the Manila services are all correctly running.
 
 ::
 
-    $ manila service-list
+    $ openstack share service lisr
     +----+------------------+-----------------------+------+---------+-------+----------------------------+
     | Id | Binary           | Host                  | Zone | Status  | State | Updated_at                 |
     +----+------------------+-----------------------+------+---------+-------+----------------------------+
@@ -36,7 +36,7 @@ specific extra specs described in
 
 ::
 
-    $ manila type-create general False
+    $ openstack share type create general False
     +----------------------+--------------------------------------+
     | Property             | Value                                |
     +----------------------+--------------------------------------+
@@ -51,7 +51,7 @@ specific extra specs described in
 
 ::
 
-    $ manila type-create --snapshot_support True shapshot False
+    $ openstack share type create --extra-specs snapshot_support=True snapshot False
     +----------------------+--------------------------------------+
     | Property             | Value                                |
     +----------------------+--------------------------------------+
@@ -75,15 +75,15 @@ specific extra specs described in
 
 ::
 
-    $ manila type-key general set share_backend_name=flashblade-1
+    $ openstack share type set --extra-specs share_backend_name=flashblade-1 general
 
 ::
 
-    $ manila type-key default set snapshot_support=False
+    $ openstack share type set --extra-specs snapshot_support=False default
 
 ::
 
-    $ manila extra-specs-list
+    $ openstack share type list --extra-specs
     +--------------------------------------+------------+--------------------------------------+
     | ID                                   | Name       | all_extra_specs                      |
     +--------------------------------------+------------+--------------------------------------+
@@ -104,7 +104,7 @@ In this section, we create a share with the general type.
 
 ::
 
-    $ manila create --name myGeneral --share-type general NFS 1
+    $ openstack share create --name myGeneral --share-type general NFS 1
     +---------------------------------------+--------------------------------------+
     | Property                              | Value                                |
     +---------------------------------------+--------------------------------------+
@@ -130,7 +130,7 @@ In this section, we create a share with the general type.
     | has_replicas                          | False                                |
     | user_id                               | 991c3f4bca814130897d9988b93301da     |
     | create_share_from_snapshot_support    | False                                |
-    | revert_to_snapshot_support            | True                                |
+    | revert_to_snapshot_support            | True                                 |
     | share_group_id                        | None                                 |
     | source_share_group_snapshot_member_id | None                                 |
     | mount_snapshot_support                | False                                |
@@ -141,7 +141,7 @@ In this section, we create a share with the general type.
 
 ::
 
-    $ manila list
+    $ openstack share list
     +--------------------------------------+-----------+------+-------------+-----------+-----------+-----------------+------------------------------------+-------------------+
     | ID                                   | Name      | Size | Share Proto | Status    | Is Public | Share Type Name | Host                               | Availability Zone |
     +--------------------------------------+-----------+------+-------------+-----------+-----------+-----------------+------------------------------------+-------------------+
@@ -158,7 +158,7 @@ NFS share with full read/write privileges.
 
 ::
 
-    $ manila access-allow myGeneral ip 10.21.200.0/24
+    $ openstack share access create myGeneral ip 10.21.200.0/24
     +--------------+--------------------------------------+
     | Property     | Value                                |
     +--------------+--------------------------------------+
@@ -176,7 +176,7 @@ NFS share with full read/write privileges.
 
 ::
 
-    $ manila access-allow myGeneral ip 10.21.220.0/24
+    $ openstack share access create myGeneral ip 10.21.220.0/24
     +--------------+--------------------------------------+
     | Property     | Value                                |
     +--------------+--------------------------------------+
@@ -199,7 +199,7 @@ Now let's examine the access rules we have created for this NFS share.
 
 ::
 
-    $ manila access-list myGeneral
+    $ openstack share access list myGeneral
     +--------------------------------------+-------------+----------------+--------------+--------+------------+----------------------------+------------+
     | id                                   | access_type | access_to      | access_level | state  | access_key | created_at                 | updated_at |
     +--------------------------------------+-------------+----------------+--------------+--------+------------+----------------------------+------------+
@@ -217,11 +217,11 @@ read/write privileges.
 
 ::
 
-    $ manila access-deny myGeneral e0eed540-e2e7-4014-aebd-83ff7a2f5d61
+    $ openstack share access delete myGeneral e0eed540-e2e7-4014-aebd-83ff7a2f5d61
 
 ::
 
-    $ manila access-list myGeneral
+    $ openstack share access list myGeneral
     +--------------------------------------+-------------+----------------+--------------+--------+------------+----------------------------+------------+
     | id                                   | access_type | access_to      | access_level | state  | access_key | created_at                 | updated_at |
     +--------------------------------------+-------------+----------------+--------------+--------+------------+----------------------------+------------+
@@ -238,8 +238,8 @@ share.
 
 ::
 
-    $ manila share-export-location-list 79779ae4-f06b-4e24-918f-2cd3262d5da8 \
-            --columns Path,Preferred
+    $ openstack share export location list 79779ae4-f06b-4e24-918f-2cd3262d5da8 \
+               --column Path --column Preferred
     +----------------------------------------------------------------+-----------+
     | Path                                                           | Preferred |
     +----------------------------------------------------------------+-----------+
@@ -256,7 +256,7 @@ be subsequently used to create a SG.
 
 ::
 
-    $ manila type-list
+    $ openstack share list
     +--------------------------------------+------------+------------+------------+--------------------------------------+-----------------------------------+-------------+
     | ID                                   | Name       | visibility | is_default | required_extra_specs                 | optional_extra_specs              | Description |
     +--------------------------------------+------------+------------+------------+--------------------------------------+-----------------------------------+-------------+
@@ -270,7 +270,7 @@ be subsequently used to create a SG.
 
 ::
 
-    $ manila share-group-type-create type1 general
+    $ openstack share group type create type1 general
     +------------+--------------------------------------+
     | Property   | Value                                |
     +------------+--------------------------------------+
@@ -282,7 +282,7 @@ be subsequently used to create a SG.
 
 ::
 
-    $ manila share-group-type-list
+    $ openstack share group type list
     +--------------------------------------+-------+------------+------------+
     | ID                                   | Name  | visibility | is_default |
     +--------------------------------------+-------+------------+------------+
@@ -293,7 +293,11 @@ Now we create a share group.
 
 ::
 
-    $ manila share-group-create --name sg_1 --description "sg_1 share group" --share_group_type type1 --share-type general
+    $ openstack share group create \
+    --name sg_1 \
+    --description "sg_1 share group" \
+    --share-group-type type1 \
+    --share-type general
     +--------------------------------+--------------------------------------+
     | Property                       | Value                                |
     +--------------------------------+--------------------------------------+
@@ -315,7 +319,7 @@ Now we create a share group.
 
 ::
 
-    $ manila share-group-list
+    $ openstack share group list
     +--------------------------------------+------+-----------+------------------+
     | ID                                   | Name | Status    | Description      |
     +--------------------------------------+------+-----------+------------------+
@@ -324,7 +328,7 @@ Now we create a share group.
 
 ::
 
-    $ manila manila share-group-show 96bcb0e1-e595-4724-9fc8-4715eeff47f1
+    $ openstack share group show 96bcb0e1-e595-4724-9fc8-4715eeff47f1
     +--------------------------------+--------------------------------------+
     | Property                       | Value                                |
     +--------------------------------+--------------------------------------+
@@ -348,7 +352,7 @@ Next we'll create two shares in the new share group.
 
 ::
 
-    $ manila create --name share_1 --share-group "sg_1" --share_type "general" NFS 1
+    $ openstack share create --name share_1 --share-group sg_1 --share-type general NFS 1
     +---------------------------------------+--------------------------------------+
     | Property                              | Value                                |
     +---------------------------------------+--------------------------------------+
@@ -374,7 +378,7 @@ Next we'll create two shares in the new share group.
     | has_replicas                          | False                                |
     | user_id                               | 991c3f4bca814130897d9988b93301da     |
     | create_share_from_snapshot_support    | False                                |
-    | revert_to_snapshot_support            | True                                |
+    | revert_to_snapshot_support            | True                                 |
     | share_group_id                        | 96bcb0e1-e595-4724-9fc8-4715eeff47f1 |
     | source_share_group_snapshot_member_id | None                                 |
     | mount_snapshot_support                | False                                |
@@ -385,7 +389,7 @@ Next we'll create two shares in the new share group.
 
 ::
 
-    $ manila create --name share_2 --share-group "sg_1" --share_type "general" NFS 1
+    $ openstack share create --name share_2 --share-group sg_1 --share-type general NFS 1
     +---------------------------------------+--------------------------------------+
     | Property                              | Value                                |
     +---------------------------------------+--------------------------------------+
@@ -424,7 +428,10 @@ Next we'll create two SG snapshots of the new share group.
 
 ::
 
-    $ manila share-group-snapshot-create --name snapshot_1 --description 'first snapshot of sg-1' 'sg_1'
+    $ openstack share group snapshot create \
+    --name snapshot_1 \
+    --description 'first snapshot of sg-1' \
+    sg_1
     +----------------+--------------------------------------+
     | Property       | Value                                |
     +----------------+--------------------------------------+
@@ -439,7 +446,7 @@ Next we'll create two SG snapshots of the new share group.
 
 ::
 
-    $ manila share-group-snapshot-list
+    $ openstack share group snapshot list
     +--------------------------------------+------------+-----------+------------------------+
     | id                                   | name       | status    | description            |
     +--------------------------------------+------------+-----------+------------------------+
@@ -448,7 +455,7 @@ Next we'll create two SG snapshots of the new share group.
 
 ::
 
-    $ manila share-group-snapshot-show d5e4d8a7-936f-40cc-b99f-05dd87ab3dd4
+    $ openstack share group snapshot show d5e4d8a7-936f-40cc-b99f-05dd87ab3dd4
     +----------------+--------------------------------------+
     | Property       | Value                                |
     +----------------+--------------------------------------+
@@ -463,7 +470,10 @@ Next we'll create two SG snapshots of the new share group.
 
 ::
 
-    $ manila share-group-snapshot-create --name snapshot_2 --description 'second snapshot of sg-1' 'sg_1'
+    $ openstack share group snapshot create \
+    --name snapshot_2 \
+    --description 'second snapshot of sg-1' \
+    sg_1
     +----------------+--------------------------------------+
     | Property       | Value                                |
     +----------------+--------------------------------------+
